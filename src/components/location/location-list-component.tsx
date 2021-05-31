@@ -4,16 +4,15 @@ import {View, Text, Button} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { RootStackParamList } from '../../../RootStackParams';
 
-type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
+type screenProp = StackNavigationProp<RootStackParamList, 'LocationList'>;
 
-const CountryList = () => {
+const LocationList = () => {
   const navigation = useNavigation<screenProp>();
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Country List Screen</Text>
-      <Button title="Add Country" onPress={() => navigation.navigate('AddCountry')} />
+    <View>
+      <Text>Location List Screen</Text>
     </View>
   );
 }
 
-export default CountryList;
+export default LocationList;

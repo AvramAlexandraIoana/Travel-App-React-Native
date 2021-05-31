@@ -10,7 +10,7 @@ const AddCountry = () => {
     const navigation = useNavigation<screenProp>();
     return(
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Add Country</Text>
+        <Text>Add Country Screen</Text>
         <Button title="Country List" onPress={() => navigation.navigate('CountryList')} />
       </View>
     )
