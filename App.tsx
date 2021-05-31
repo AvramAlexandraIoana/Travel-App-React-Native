@@ -15,6 +15,7 @@ export default class App extends React.Component<Props, State> {
       <View style={styles.container}>
         <Text style={styles.welcome}>
           Platforma:
+          
         </Text>
         <Text style={styles.instructions}>
           {instructions}
