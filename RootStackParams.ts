@@ -1,4 +1,4 @@
 export type RootStackParamList = {
-    Main: undefined;
-    Auth: undefined;
-    };
+    CountryList: undefined;
+    AddCountry: undefined;
+};
