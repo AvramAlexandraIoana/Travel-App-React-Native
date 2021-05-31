@@ -4,16 +4,16 @@ import React, { useState } from "react";
 import { View, Text, Button } from "react-native";
 import { RootStackParamList } from "../../../RootStackParams";
 
-type authScreenProp = StackNavigationProp<RootStackParamList, 'Auth'>;
+type screenProp = StackNavigationProp<RootStackParamList, 'AddCountry'>;
 
-const AuthScreen = () => {
-    const navigation = useNavigation<authScreenProp>();
+const AddCountry = () => {
+    const navigation = useNavigation<screenProp>();
     return(
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Auth Screen</Text>
-        <Button title="Login" onPress={() => navigation.navigate('Main')} />
+        <Text>Add Country</Text>
+        <Button title="Country List" onPress={() => navigation.navigate('CountryList')} />
       </View>
     )
 }
 
-export default AuthScreen;
+export default AddCountry;
