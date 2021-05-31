@@ -1,45 +1,19 @@
-import * as React from 'react'
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import { RootStackParamList } from './RootStackParams';
+import AuthScreen from './src/components/country/add-country-component';
+import MainScreen from './src/components/country/country-list-component';
 
-const instructions = Platform.select({
-  ios: 'IOS',
-  android: 'ANDROID',
-});
+const Stack = createStackNavigator<RootStackParamList>();
 
-export interface Props { }
-export interface State { }
-
-export default class App extends React.Component<Props, State> {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Platforma:
-          
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>
-    );
-  }
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Auth" component={AuthScreen} />
+        <Stack.Screen name="Main" component={MainScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
