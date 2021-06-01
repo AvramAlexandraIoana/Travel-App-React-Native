@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "219295443865",
+    "project_id": "reactnative-f5454",
+    "storage_bucket": "reactnative-f5454.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219295443865:android:dfc6235c8bff5ae80b0108",
+        "android_client_info": {
+          "package_name": "com.travel.travelName"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219295443865-kii05mif9is8er0r08kb1771p3s22dk9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCe3EdIaCTw_cIELaWeV_Tbsci9bECfcdg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219295443865-kii05mif9is8er0r08kb1771p3s22dk9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

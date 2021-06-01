@@ -1,21 +1,32 @@
-import React from 'react';
+import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import {RootStackParamList} from './RootStackParams';
-import AddCountry from './src/components/country/add-country-component';
-import CountryList from './src/components/country/country-list-component';
-import MainScreen from './src/components/main/main-component';
+import SignUp from './src/components/auth/sign-up-component';
+import Login from './src/components/auth/login-component';
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createStackNavigator();
+
+function MyStack() {
+  return (
+    <Stack.Navigator initialRouteName="Signup">
+      <Stack.Screen
+        name="SignUp"
+        component={SignUp}
+        options={{title: 'SignUp Page'}}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{title: 'Login Page'}}
+      />
+    </Stack.Navigator>
+  );
+}
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Main" component={MainScreen} />
-        <Stack.Screen name="CountryList" component={CountryList} />
-        <Stack.Screen name="AddCountry" component={AddCountry} />
-      </Stack.Navigator>
+      <MyStack />
     </NavigationContainer>
   );
 }
