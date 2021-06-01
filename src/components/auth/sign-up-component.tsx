@@ -17,7 +17,6 @@ import FormButton from '../custom-fields/form-button';
 import AuthService from '../../services/auth-service';
 
 import auth from '@react-native-firebase/auth';
-import firebase from '../../../database/firebase-db';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
 
