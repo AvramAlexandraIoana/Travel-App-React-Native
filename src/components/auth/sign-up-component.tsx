@@ -36,6 +36,7 @@ const SignUp = () => {
       );
       if (response && response.user) {
         console.log('Success ✅', 'Account created successfully');
+        navigation.navigate('Login');
       }
     } catch (e) {
       console.error(e.message);
