@@ -17,6 +17,7 @@ import FormInput from '../custom-fields/form-input';
 import auth from '@react-native-firebase/auth';
 import FormButton from '../custom-fields/form-button';
 import SocialButton from '../custom-fields/social-button';
+import {GoogleSignin} from '@react-native-community/google-signin';
 // import {GoogleSignin} from '@react-native-community/google-signin';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'Login'>;
@@ -29,20 +30,19 @@ const Login = () => {
 
   useEffect(() => {
     // initialize the Google SDK
-    // GoogleSignin.configure({
-    //   webClientId:
-    //     '219295443865-kii05mif9is8er0r08kb1771p3s22dk9.apps.googleusercontent.com',
-    //   offlineAccess: true,
-    // });
+    GoogleSignin.configure({
+      webClientId:
+        '219295443865-kii05mif9is8er0r08kb1771p3s22dk9.apps.googleusercontent.com',
+    });
   }, []);
 
   const googleLogin = async () => {
-    // Get the users ID token
-    //const {idToken} = await GoogleSignin.signIn();
-    // Create a Google credential with the token
-    //const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    // Sign-in the user with the credential
-    //return auth().signInWithCredential(googleCredential);
+    //Get the users ID token
+    const {idToken} = await GoogleSignin.signIn();
+    //Create a Google credential with the token
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    //Sign-in the user with the credential
+    return auth().signInWithCredential(googleCredential);
   };
 
   const loginUser = async (email: any, password: any) => {

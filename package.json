@@ -10,6 +10,7 @@
     "lint": "tslint -p \".\" -t stylish"
   },
   "dependencies": {
+    "@react-native-community/google-signin": "^5.0.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^12.0.0",
     "@react-native-firebase/auth": "^12.0.0",
