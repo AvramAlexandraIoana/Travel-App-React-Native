@@ -1,6 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {userInfo} from 'os';
 import React, {useState} from 'react';
 import {
   View,
@@ -28,7 +27,7 @@ const SignUp = () => {
 
   const navigation = useNavigation<screenProp>();
 
-  const doCreateUser = async (email, password) => {
+  const doCreateUser = async (email: string, password: string) => {
     try {
       let response = await auth().createUserWithEmailAndPassword(
         email,

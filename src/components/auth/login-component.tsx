@@ -13,6 +13,8 @@ import {
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
 import FormInput from '../custom-fields/form-input';
+import auth from '@react-native-firebase/auth';
+import FormButton from '../custom-fields/form-button';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -20,6 +22,19 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation<screenProp>();
+
+  const loginUser = async (email: any, password: any) => {
+    try {
+      let response = await auth().signInWithEmailAndPassword(email, password);
+      console.log(response);
+      if (response && response.user) {
+        console.log('Success ✅', 'User sign in successfully');
+        navigation.navigate('Dashboard');
+      }
+    } catch (e) {
+      console.error(e.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -47,6 +62,21 @@ const Login = () => {
         iconType="lock"
         secureTextEntry={true}
       />
+
+      <FormButton
+        buttonTitle="Login"
+        onPress={() => {
+          loginUser(email, password);
+        }}
+      />
+
+      <TouchableOpacity
+        style={styles.forgotButton}
+        onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.navButtonText}>
+          Don't have an acount? Create here
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
