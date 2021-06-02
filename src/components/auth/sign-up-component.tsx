@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,11 +16,12 @@ import FormButton from '../custom-fields/form-button';
 import AuthService from '../../services/auth-service';
 
 import auth from '@react-native-firebase/auth';
+import SocialButton from '../custom-fields/social-button';
+import {GoogleSignin} from '@react-native-community/google-signin';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
 
 const SignUp = () => {
-  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showLoading, setShowLoading] = useState(false);
@@ -28,16 +29,19 @@ const SignUp = () => {
   const navigation = useNavigation<screenProp>();
 
   const doCreateUser = async (email: string, password: string) => {
+    setShowLoading(true);
     try {
       let response = await auth().createUserWithEmailAndPassword(
         email,
         password,
       );
       if (response && response.user) {
+        setShowLoading(false);
         console.log('Success ✅', 'Account created successfully');
         navigation.navigate('Login');
       }
     } catch (e) {
+      setShowLoading(false);
       console.error(e.message);
     }
   };
@@ -45,15 +49,6 @@ const SignUp = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Create an account</Text>
-
-      <FormInput
-        labelValue={name}
-        onChangeText={(name: string) => setName(name)}
-        placeholderText="Name"
-        iconType="user"
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
 
       <FormInput
         labelValue={email}
@@ -97,6 +92,22 @@ const SignUp = () => {
           Privacy Policy
         </Text>
       </View>
+
+      <SocialButton
+        buttonTitle="Sign Up with Facebook"
+        btnType="facebook"
+        color="#4867aa"
+        backgroundColor="#e6eaf4"
+        onPress={() => {}}
+      />
+
+      <SocialButton
+        buttonTitle="Sign Up with Google"
+        btnType="google"
+        color="#de4d41"
+        backgroundColor="#f5e7ea"
+        onPress={() => {}}
+      />
 
       <TouchableOpacity
         style={styles.navButton}

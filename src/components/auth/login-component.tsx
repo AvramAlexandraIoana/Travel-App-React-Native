@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {userInfo} from 'os';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,29 +9,54 @@ import {
   Image,
   StyleSheet,
   ImageComponent,
+  ActivityIndicator,
 } from 'react-native';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
 import FormInput from '../custom-fields/form-input';
 import auth from '@react-native-firebase/auth';
 import FormButton from '../custom-fields/form-button';
+import SocialButton from '../custom-fields/social-button';
+// import {GoogleSignin} from '@react-native-community/google-signin';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showLoading, setShowLoading] = useState(false);
   const navigation = useNavigation<screenProp>();
 
+  useEffect(() => {
+    // initialize the Google SDK
+    // GoogleSignin.configure({
+    //   webClientId:
+    //     '219295443865-kii05mif9is8er0r08kb1771p3s22dk9.apps.googleusercontent.com',
+    //   offlineAccess: true,
+    // });
+  }, []);
+
+  const googleLogin = async () => {
+    // Get the users ID token
+    //const {idToken} = await GoogleSignin.signIn();
+    // Create a Google credential with the token
+    //const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    // Sign-in the user with the credential
+    //return auth().signInWithCredential(googleCredential);
+  };
+
   const loginUser = async (email: any, password: any) => {
+    setShowLoading(true);
     try {
       let response = await auth().signInWithEmailAndPassword(email, password);
       console.log(response);
       if (response && response.user) {
+        setShowLoading(false);
         console.log('Success ✅', 'User sign in successfully');
         navigation.navigate('Dashboard');
       }
     } catch (e) {
+      setShowLoading(false);
       console.error(e.message);
     }
   };
@@ -70,6 +95,24 @@ const Login = () => {
         }}
       />
 
+      <SocialButton
+        buttonTitle="Sign In with Facebook"
+        btnType="facebook"
+        color="#4867aa"
+        backgroundColor="#e6eaf4"
+        onPress={() => {}}
+      />
+
+      <SocialButton
+        buttonTitle="Sign In with Google"
+        btnType="google"
+        color="#de4d41"
+        backgroundColor="#f5e7ea"
+        onPress={() => {
+          googleLogin();
+        }}
+      />
+
       <TouchableOpacity
         style={styles.forgotButton}
         onPress={() => navigation.navigate('SignUp')}>
@@ -77,6 +120,12 @@ const Login = () => {
           Don't have an acount? Create here
         </Text>
       </TouchableOpacity>
+
+      {showLoading && (
+        <View style={styles.activity}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
     </View>
   );
 };
@@ -113,5 +162,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#2e64e5',
     fontFamily: 'Lato-Regular',
+  },
+  activity: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
