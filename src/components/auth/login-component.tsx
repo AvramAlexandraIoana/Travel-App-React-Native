@@ -17,10 +17,25 @@ import FormInput from '../custom-fields/form-input';
 import auth from '@react-native-firebase/auth';
 import FormButton from '../custom-fields/form-button';
 import SocialButton from '../custom-fields/social-button';
-import {GoogleSignin} from '@react-native-community/google-signin';
 // import {GoogleSignin} from '@react-native-community/google-signin';
-
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 type screenProp = StackNavigationProp<RootStackParamList, 'Login'>;
+
+GoogleSignin.configure({
+  scopes: ['https://www.googleapis.com/auth/drive.readonly'], // what API you want to access on behalf of the user, default is email and profile
+  webClientId:
+    '836984052706-3bdkeqanellg791htfstu19lpekbhbkd.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+  offlineAccess: true, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+  hostedDomain: '', // specifies a hosted domain restriction
+  loginHint: '', // [iOS] The user's ID, or email address, to be prefilled in the authentication UI if possible. [See docs here](https://developers.google.com/identity/sign-in/ios/api/interface_g_i_d_sign_in.html#a0a68c7504c31ab0b728432565f6e33fd)
+  forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+  accountName: '', // [Android] specifies an account name on the device that should be used
+  googleServicePlistPath: '', // [iOS] optional, if you renamed your GoogleService-Info file, new name here, e.g. GoogleService-Info-Staging
+});
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -30,11 +45,6 @@ const Login = () => {
 
   useEffect(() => {
     // initialize the Google SDK
-    GoogleSignin.configure({
-      webClientId:
-        '836984052706-3bdkeqanellg791htfstu19lpekbhbkd.apps.googleusercontent.com',
-      offlineAccess: true,
-    });
   }, []);
 
   const googleLogin = async () => {
