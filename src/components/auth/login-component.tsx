@@ -33,16 +33,22 @@ const Login = () => {
     GoogleSignin.configure({
       webClientId:
         '836984052706-3bdkeqanellg791htfstu19lpekbhbkd.apps.googleusercontent.com',
+      offlineAccess: true,
     });
   }, []);
 
   const googleLogin = async () => {
-    //Get the users ID token
-    const {idToken} = await GoogleSignin.signIn();
-    //Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    //Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential);
+    try {
+      await GoogleSignin.hasPlayServices();
+      const {accessToken, idToken} = await GoogleSignin.signIn();
+      const credential = auth.GoogleAuthProvider.credential(
+        idToken,
+        accessToken,
+      );
+      await auth().signInWithCredential(credential);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const loginUser = async (email: any, password: any) => {
