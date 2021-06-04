@@ -32,7 +32,7 @@ const Login = () => {
     // initialize the Google SDK
     GoogleSignin.configure({
       webClientId:
-        '836984052706-gh8e6g34t6kco9h216pt4028l4clgbl0.apps.googleusercontent.com',
+        '836984052706-3bdkeqanellg791htfstu19lpekbhbkd.apps.googleusercontent.com',
     });
   }, []);
 
