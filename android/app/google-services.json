@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "836984052706",
-    "project_id": "fghhhhhh-57a07",
-    "storage_bucket": "fghhhhhh-57a07.appspot.com"
+    "project_number": "3195982138",
+    "project_id": "reactnative-257dd",
+    "storage_bucket": "reactnative-257dd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:836984052706:android:767c639aa7b42458bfb7bb",
+        "mobilesdk_app_id": "1:3195982138:android:6459af86221b552c584003",
         "android_client_info": {
           "package_name": "com.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "836984052706-gh8e6g34t6kco9h216pt4028l4clgbl0.apps.googleusercontent.com",
+          "client_id": "3195982138-h2kt2hrqgg0sphalf40hvud8cq6ceo6s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.app",
-            "certificate_hash": "6bf4735e8bd12816f80a950ead637b8c4e86e428"
+            "certificate_hash": "be61b5d532a387fd7965e62ad336df33edc18828"
           }
         },
         {
-          "client_id": "836984052706-3bdkeqanellg791htfstu19lpekbhbkd.apps.googleusercontent.com",
+          "client_id": "3195982138-747b23sakqvkgcabh7is6nqqruapfesb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCckHrPsdqNkhWz07duA1ou6UJpvhzs-V8"
+          "current_key": "AIzaSyCW2zD_oxAuXF6cF-s52BonQ0DLtoml2Go"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "836984052706-3bdkeqanellg791htfstu19lpekbhbkd.apps.googleusercontent.com",
+              "client_id": "3195982138-747b23sakqvkgcabh7is6nqqruapfesb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
