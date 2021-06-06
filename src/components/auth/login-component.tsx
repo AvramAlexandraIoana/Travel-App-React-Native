@@ -57,7 +57,7 @@ const Login = () => {
       );
       await auth().signInWithCredential(credential);
       console.log('Success');
-      navigation.navigate('Dashboard');
+      navigation.navigate('AddCountry');
     } catch (error) {
       console.log(error);
     }
@@ -111,14 +111,6 @@ const Login = () => {
         onPress={() => {
           loginUser(email, password);
         }}
-      />
-
-      <SocialButton
-        buttonTitle="Sign In with Facebook"
-        btnType="facebook"
-        color="#4867aa"
-        backgroundColor="#e6eaf4"
-        onPress={() => {}}
       />
 
       <SocialButton
