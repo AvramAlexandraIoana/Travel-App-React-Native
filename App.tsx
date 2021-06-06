@@ -6,6 +6,8 @@ import Login from './src/components/auth/login-component';
 import Dashboard from './src/components/auth/dashboard-component';
 import AddCountry from './src/components/country/add-country-component';
 import CountryList from './src/components/country/country-list-component';
+import CountryDetail from './src/components/country/country-update-component';
+import CountryUpdate from './src/components/country/country-update-component';
 
 const Stack = createStackNavigator();
 
@@ -39,6 +41,12 @@ function MyStack() {
       <Stack.Screen
         name="CountryList"
         component={CountryList}
+        options={{title: 'Country List'}}
+      />
+
+      <Stack.Screen
+        name="CountryUpdate"
+        component={CountryUpdate}
         options={{title: ''}}
       />
     </Stack.Navigator>

@@ -16,11 +16,12 @@ const AddCountry = () => {
   const navigation = useNavigation<screenProp>();
 
   const [countryName, setCountryName] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const addCountry = (countryName: string) => {
     ref
       .add({
-        nme: countryName,
+        name: countryName,
       })
       .then(response => {
         console.log('Tara adaugata cu succes');
@@ -29,6 +30,7 @@ const AddCountry = () => {
       })
       .catch(error => {
         console.log('Eroare');
+        setErrorMessage(errorMessage);
       });
   };
   return (
