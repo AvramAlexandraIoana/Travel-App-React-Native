@@ -8,12 +8,14 @@ import AddCountry from './src/components/country/add-country-component';
 import CountryList from './src/components/country/country-list-component';
 import CountryDetail from './src/components/country/country-update-component';
 import CountryUpdate from './src/components/country/country-update-component';
+import AddLocation from './src/components/location/add-location-component';
+import LocationList from './src/components/location/location-list-component';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator initialRouteName="CountryList">
+    <Stack.Navigator initialRouteName="LocationList">
       <Stack.Screen
         name="Login"
         component={Login}
@@ -48,6 +50,18 @@ function MyStack() {
         name="CountryUpdate"
         component={CountryUpdate}
         options={{title: ''}}
+      />
+
+      <Stack.Screen
+        name="AddLocation"
+        component={AddLocation}
+        options={{title: ''}}
+      />
+
+      <Stack.Screen
+        name="LocationList"
+        component={LocationList}
+        options={{title: 'Location List'}}
       />
     </Stack.Navigator>
   );
