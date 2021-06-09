@@ -4,6 +4,7 @@ export type RootStackParamList = {
   CountryDetail: undefined;
   LocationList: undefined;
   AddLocation: undefined;
+  UpdateLocation: undefined;
   Main: undefined;
   SignUp: undefined;
   Login: undefined;

@@ -5,11 +5,12 @@ import SignUp from './src/components/auth/sign-up-component';
 import Login from './src/components/auth/login-component';
 import Dashboard from './src/components/auth/dashboard-component';
 import AddCountry from './src/components/country/add-country-component';
-import CountryList from './src/components/country/country-list-component';
-import CountryDetail from './src/components/country/country-update-component';
 import CountryUpdate from './src/components/country/country-update-component';
 import AddLocation from './src/components/location/add-location-component';
 import LocationList from './src/components/location/location-list-component';
+import UpdateLocation from './src/components/location/update-location-component';
+import CountryList from './src/components/country/country-list-component';
+import CountryDetails from './src/components/country/country-details-component';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,12 @@ function MyStack() {
       />
 
       <Stack.Screen
+        name="CountryDetails"
+        component={CountryDetails}
+        options={{title: 'Country Details'}}
+      />
+
+      <Stack.Screen
         name="CountryList"
         component={CountryList}
         options={{title: 'Country List'}}
@@ -55,6 +62,12 @@ function MyStack() {
       <Stack.Screen
         name="AddLocation"
         component={AddLocation}
+        options={{title: ''}}
+      />
+
+      <Stack.Screen
+        name="UpdateLocation"
+        component={UpdateLocation}
         options={{title: ''}}
       />
 

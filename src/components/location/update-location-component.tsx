@@ -14,13 +14,11 @@ import firebase from '@react-native-firebase/app';
 import {ActivityIndicator} from 'react-native';
 import Loader from '../custom-fields/loader';
 
-type screenProp = StackNavigationProp<RootStackParamList, 'AddLocation'>;
-
-const AddLocation = () => {
+const UpdateLocation = ({route}) => {
   const refCountry = firestore().collection('country');
   const refLocation = firestore().collection('location');
   const [selectedValue, setSelectedValue] = useState('');
-  const navigation = useNavigation<screenProp>();
+  const navigation = useNavigation();
 
   const [countryList, setCountryList] = useState([]);
 
@@ -29,6 +27,28 @@ const AddLocation = () => {
   const [countryId, setCountryId] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
+
+  const getLocation = () => {
+    const dbRef = refLocation.doc(route.params.id);
+    dbRef
+      .get()
+      .then((response: any) => {
+        console.log(response);
+        if (response.exists) {
+          const location = response.data();
+          console.log(location);
+          setCity(location.city);
+          setStreetAddress(location.streetAddress);
+          setCountryId(location.countryId);
+        } else {
+          console.log('Location does not exist!');
+        }
+      })
+      .catch((error: any) => {
+        console.log('Eroare');
+        setErrorMessage(error);
+      });
+  };
 
   const getCountryList = async () => {
     setShowLoading(true);
@@ -53,27 +73,23 @@ const AddLocation = () => {
 
   useEffect(() => {
     getCountryList();
+    getLocation();
   }, []);
 
-  const addLocation = (
-    streetAddress: string,
-    city: string,
-    countryId: string,
-  ) => {
-    refLocation
-      .add({
-        streetAddress: streetAddress,
+  const updateLocation = id => {
+    const dbRef = refLocation.doc(id);
+    dbRef
+      .set({
         city: city,
+        streetAddress: streetAddress,
         countryId: countryId,
       })
-      .then((response: any) => {
-        console.log('Locatia adaugata cu succes');
-        console.log(response);
+      .then(response => {
         navigation.navigate('LocationList');
       })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(errorMessage);
+      .catch(error => {
+        console.log('Error', error);
+        setErrorMessage(error);
       });
   };
   return (
@@ -98,7 +114,7 @@ const AddLocation = () => {
       {
         <View style={{borderWidth: 1, borderColor: '#ccc', borderRadius: 4}}>
           <Picker
-            selectedValue={selectedValue}
+            selectedValue={countryId}
             style={{height: 50}}
             onValueChange={(itemValue, itemIndex) => {
               if (itemValue != '0') {
@@ -114,9 +130,9 @@ const AddLocation = () => {
       }
 
       <FormButton
-        buttonTitle="Add Location"
+        buttonTitle="Update Location"
         onPress={() => {
-          addLocation(streetAddress, city, countryId);
+          updateLocation(route.params.id);
         }}
       />
       {/* <Text>{!showLoading ? countryList.length : 0}</Text> */}
@@ -125,7 +141,7 @@ const AddLocation = () => {
   );
 };
 
-export default AddLocation;
+export default UpdateLocation;
 
 const styles = StyleSheet.create({
   container: {

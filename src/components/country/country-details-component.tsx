@@ -17,12 +17,12 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 
-const LocationList = () => {
+const CountryDetails = () => {
   const navigation = useNavigation();
-  const [locationList, setLocationList] = useState([]);
+  const [countryList, setCountryList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('location');
+  const ref = firestore().collection('country');
 
   const list1 = [
     {
@@ -35,23 +35,21 @@ const LocationList = () => {
     },
   ];
 
-  const getLocationList = async () => {
+  const getCountryList = async () => {
     setShowLoading(true);
     try {
       var list: any = [];
       var snapshot = await ref.get();
       snapshot.forEach(res => {
-        const {city, streetAddress, countryId} = res.data();
+        const {name} = res.data();
         list.push({
           id: res.id,
-          city,
-          streetAddress,
-          countryId,
+          name,
         });
       });
       console.log(list);
       setShowLoading(false);
-      setLocationList([...list]);
+      setCountryList([...list]);
     } catch (e) {
       console.log(e);
       setErrorMessage('Error');
@@ -59,17 +57,17 @@ const LocationList = () => {
   };
 
   useEffect(() => {
-    getLocationList();
+    getCountryList();
   }, []);
 
-  const deleteLocation = id => {
+  const deleteCountry = id => {
     console.log(id);
     const dbRef = ref.doc(id);
     dbRef
       .delete()
       .then(res => {
         console.log('Country removed');
-        getLocationList();
+        getCountryList();
       })
       .catch(error => {
         console.log(error);
@@ -82,23 +80,20 @@ const LocationList = () => {
       <View>
         <Button
           onPress={() => {
-            navigation.navigate('AddLocation');
+            navigation.navigate('AddCountry');
           }}
-          title="Add Location"
+          title="Add Country"
           color="#6495ed"></Button>
       </View>
-      {locationList &&
-        locationList.map((item: any, i) => (
+      {countryList &&
+        countryList.map((item: any, i) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>City: {item.city}</ListItem.Title>
-              <ListItem.Title>
-                Street Adress: {item.streetAddress}
-              </ListItem.Title>
+              <ListItem.Title>{item.name}</ListItem.Title>
               <View style={styles.footerWrapper}>
                 <Button
                   onPress={() => {
-                    navigation.navigate('UpdateLocation', {id: item.id});
+                    navigation.navigate('CountryUpdate', {id: item.id});
                   }}
                   title="Update"
                   color="#ff8c00"
@@ -106,19 +101,10 @@ const LocationList = () => {
                 <View style={{marginLeft: 10}}>
                   <Button
                     onPress={() => {
-                      deleteLocation(item.id);
+                      deleteCountry(item.id);
                     }}
                     title="Delete"
                     color="#ff0000"
-                  />
-                </View>
-                <View style={{marginLeft: 10}}>
-                  <Button
-                    onPress={() => {
-                      navigation.navigate('CountryDetails');
-                    }}
-                    title="View Country Details"
-                    color="#87ceeb"
                   />
                 </View>
               </View>
@@ -131,7 +117,7 @@ const LocationList = () => {
   );
 };
 
-export default LocationList;
+export default CountryDetails;
 
 const styles = StyleSheet.create({
   logo: {

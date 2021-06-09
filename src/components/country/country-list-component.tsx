@@ -15,6 +15,7 @@ import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
+import Loader from '../custom-fields/loader';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
 
@@ -22,6 +23,7 @@ const CountryList = () => {
   const navigation = useNavigation();
   const [countryList, setCountryList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showLoading, setShowLoading] = useState(false);
   const ref = firestore().collection('country');
 
   const list1 = [
@@ -36,6 +38,7 @@ const CountryList = () => {
   ];
 
   const getCountryList = async () => {
+    setShowLoading(true);
     try {
       var list: any = [];
       var snapshot = await ref.get();
@@ -46,6 +49,8 @@ const CountryList = () => {
           name,
         });
       });
+      console.log(list);
+      setShowLoading(false);
       setCountryList([...list]);
     } catch (e) {
       console.log(e);
@@ -55,7 +60,7 @@ const CountryList = () => {
 
   useEffect(() => {
     getCountryList();
-  });
+  }, []);
 
   const deleteCountry = id => {
     console.log(id);
@@ -82,31 +87,34 @@ const CountryList = () => {
           title="Add Country"
           color="#6495ed"></Button>
       </View>
-      {countryList.map((item: any, i) => (
-        <ListItem key={i} bottomDivider>
-          <ListItem.Content>
-            <ListItem.Title>{item.name}</ListItem.Title>
-            <View style={styles.footerWrapper}>
-              <Button
-                onPress={() => {
-                  navigation.navigate('CountryUpdate', {id: item.id});
-                }}
-                title="Update"
-                color="#ff8c00"
-              />
-              <View style={{marginLeft: 10}}>
+      {countryList &&
+        countryList.map((item: any, i) => (
+          <ListItem key={i} bottomDivider>
+            <ListItem.Content>
+              <ListItem.Title>{item.name}</ListItem.Title>
+              <View style={styles.footerWrapper}>
                 <Button
                   onPress={() => {
-                    deleteCountry(item.id);
+                    navigation.navigate('CountryUpdate', {id: item.id});
                   }}
-                  title="Delete"
-                  color="#ff0000"
+                  title="Update"
+                  color="#ff8c00"
                 />
+                <View style={{marginLeft: 10}}>
+                  <Button
+                    onPress={() => {
+                      deleteCountry(item.id);
+                    }}
+                    title="Delete"
+                    color="#ff0000"
+                  />
+                </View>
               </View>
-            </View>
-          </ListItem.Content>
-        </ListItem>
-      ))}
+            </ListItem.Content>
+          </ListItem>
+        ))}
+      <Text>{showLoading}</Text>
+      {showLoading && <Loader></Loader>}
     </ScrollView>
   );
 };
