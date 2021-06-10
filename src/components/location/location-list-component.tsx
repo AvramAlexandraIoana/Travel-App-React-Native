@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {
   View,
@@ -23,17 +23,7 @@ const LocationList = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const ref = firestore().collection('location');
-
-  const list1 = [
-    {
-      title: 'Appointments',
-      icon: 'av-timer',
-    },
-    {
-      title: 'Trips',
-      icon: 'flight-takeoff',
-    },
-  ];
+  const isFocused = useIsFocused();
 
   const getLocationList = async () => {
     setShowLoading(true);
@@ -59,8 +49,11 @@ const LocationList = () => {
   };
 
   useEffect(() => {
-    getLocationList();
-  }, []);
+    if (isFocused) {
+      console.log('called');
+      getLocationList();
+    }
+  }, [isFocused]);
 
   const deleteLocation = id => {
     console.log(id);
@@ -115,7 +108,9 @@ const LocationList = () => {
                 <View style={{marginLeft: 10}}>
                   <Button
                     onPress={() => {
-                      navigation.navigate('CountryDetails');
+                      navigation.navigate('CountryDetails', {
+                        id: item.countryId,
+                      });
                     }}
                     title="View Country Details"
                     color="#87ceeb"

@@ -11,12 +11,15 @@ import LocationList from './src/components/location/location-list-component';
 import UpdateLocation from './src/components/location/update-location-component';
 import CountryList from './src/components/country/country-list-component';
 import CountryDetails from './src/components/country/country-details-component';
+import AddAgency from './src/components/agency/add-agency';
+import AgencyList from './src/components/agency/agency-list-component';
+import AgencyUpdate from './src/components/agency/agency-update-component';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator initialRouteName="LocationList">
+    <Stack.Navigator initialRouteName="AgencyList">
       <Stack.Screen
         name="Login"
         component={Login}
@@ -75,6 +78,23 @@ function MyStack() {
         name="LocationList"
         component={LocationList}
         options={{title: 'Location List'}}
+      />
+
+      <Stack.Screen
+        name="AddAgency"
+        component={AddAgency}
+        options={{title: ''}}
+      />
+
+      <Stack.Screen
+        name="AgencyUpdate"
+        component={AgencyUpdate}
+        options={{title: ''}}
+      />
+      <Stack.Screen
+        name="AgencyList"
+        component={AgencyList}
+        options={{title: 'Agency List'}}
       />
     </Stack.Navigator>
   );

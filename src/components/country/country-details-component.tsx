@@ -17,100 +17,44 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 
-const CountryDetails = () => {
+const CountryDetails = ({route}) => {
   const navigation = useNavigation();
-  const [countryList, setCountryList] = useState([]);
+  const [countryName, setCountryName] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const ref = firestore().collection('country');
 
-  const list1 = [
-    {
-      title: 'Appointments',
-      icon: 'av-timer',
-    },
-    {
-      title: 'Trips',
-      icon: 'flight-takeoff',
-    },
-  ];
-
-  const getCountryList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await ref.get();
-      snapshot.forEach(res => {
-        const {name} = res.data();
-        list.push({
-          id: res.id,
-          name,
-        });
-      });
-      console.log(list);
-      setShowLoading(false);
-      setCountryList([...list]);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
-
-  useEffect(() => {
-    getCountryList();
-  }, []);
-
-  const deleteCountry = id => {
-    console.log(id);
-    const dbRef = ref.doc(id);
+  const getCountry = () => {
+    const dbRef = ref.doc(route.params.id);
     dbRef
-      .delete()
-      .then(res => {
-        console.log('Country removed');
-        getCountryList();
+      .get()
+      .then((response: any) => {
+        console.log(response);
+        if (response.exists) {
+          const country = response.data();
+          console.log(country);
+          setCountryName(country.name);
+        } else {
+          console.log('Country does not exist!');
+        }
       })
-      .catch(error => {
-        console.log(error);
+      .catch((error: any) => {
+        console.log('Eroare');
         setErrorMessage(error);
       });
   };
 
+  useEffect(() => {
+    getCountry();
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
-      <View>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddCountry');
-          }}
-          title="Add Country"
-          color="#6495ed"></Button>
-      </View>
-      {countryList &&
-        countryList.map((item: any, i) => (
-          <ListItem key={i} bottomDivider>
-            <ListItem.Content>
-              <ListItem.Title>{item.name}</ListItem.Title>
-              <View style={styles.footerWrapper}>
-                <Button
-                  onPress={() => {
-                    navigation.navigate('CountryUpdate', {id: item.id});
-                  }}
-                  title="Update"
-                  color="#ff8c00"
-                />
-                <View style={{marginLeft: 10}}>
-                  <Button
-                    onPress={() => {
-                      deleteCountry(item.id);
-                    }}
-                    title="Delete"
-                    color="#ff0000"
-                  />
-                </View>
-              </View>
-            </ListItem.Content>
-          </ListItem>
-        ))}
+      <ListItem bottomDivider>
+        <ListItem.Content>
+          <ListItem.Title>Country Name: {countryName} </ListItem.Title>
+        </ListItem.Content>
+      </ListItem>
       <Text>{showLoading}</Text>
       {showLoading && <Loader></Loader>}
     </ScrollView>

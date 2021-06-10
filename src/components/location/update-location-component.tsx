@@ -92,6 +92,7 @@ const UpdateLocation = ({route}) => {
         setErrorMessage(error);
       });
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Add Location</Text>

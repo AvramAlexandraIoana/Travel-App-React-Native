@@ -17,42 +17,30 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 
-type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
-
-const CountryList = () => {
+const AgencyList = () => {
   const navigation = useNavigation();
-  const [countryList, setCountryList] = useState([]);
+  const [agencyList, setAgencyList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('country');
+  const ref = firestore().collection('agency');
   const isFocused = useIsFocused();
 
-  const list1 = [
-    {
-      title: 'Appointments',
-      icon: 'av-timer',
-    },
-    {
-      title: 'Trips',
-      icon: 'flight-takeoff',
-    },
-  ];
-
-  const getCountryList = async () => {
+  const getAgencyList = async () => {
     setShowLoading(true);
     try {
       var list: any = [];
       var snapshot = await ref.get();
       snapshot.forEach(res => {
-        const {name} = res.data();
+        const {name, locationId} = res.data();
         list.push({
           id: res.id,
           name,
+          locationId,
         });
       });
       console.log(list);
       setShowLoading(false);
-      setCountryList([...list]);
+      setAgencyList([...list]);
     } catch (e) {
       console.log(e);
       setErrorMessage('Error');
@@ -62,18 +50,18 @@ const CountryList = () => {
   useEffect(() => {
     if (isFocused) {
       console.log('called');
-      getCountryList();
+      getAgencyList();
     }
   }, [isFocused]);
 
-  const deleteCountry = id => {
+  const deleteAgency = id => {
     console.log(id);
     const dbRef = ref.doc(id);
     dbRef
       .delete()
       .then(res => {
-        console.log('Country removed');
-        getCountryList();
+        console.log('Agency removed');
+        getAgencyList();
       })
       .catch(error => {
         console.log(error);
@@ -86,20 +74,20 @@ const CountryList = () => {
       <View>
         <Button
           onPress={() => {
-            navigation.navigate('AddCountry');
+            navigation.navigate('AddAgency');
           }}
-          title="Add Country"
+          title="Add Agency"
           color="#6495ed"></Button>
       </View>
-      {countryList &&
-        countryList.map((item: any, i) => (
+      {agencyList &&
+        agencyList.map((item: any, i) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>Country Name: {item.name}</ListItem.Title>
+              <ListItem.Title>Agency Name: {item.name}</ListItem.Title>
               <View style={styles.footerWrapper}>
                 <Button
                   onPress={() => {
-                    navigation.navigate('CountryUpdate', {id: item.id});
+                    navigation.navigate('AgencyUpdate', {id: item.id});
                   }}
                   title="Update"
                   color="#ff8c00"
@@ -107,7 +95,7 @@ const CountryList = () => {
                 <View style={{marginLeft: 10}}>
                   <Button
                     onPress={() => {
-                      deleteCountry(item.id);
+                      deleteAgency(item.id);
                     }}
                     title="Delete"
                     color="#ff0000"
@@ -123,7 +111,7 @@ const CountryList = () => {
   );
 };
 
-export default CountryList;
+export default AgencyList;
 
 const styles = StyleSheet.create({
   logo: {
