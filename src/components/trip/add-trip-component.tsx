@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {useEffect, useRef, useState} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
+import {View, Text, Button, StyleSheet, ScrollView} from 'react-native';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
@@ -14,6 +14,17 @@ import firebase from '@react-native-firebase/app';
 import {ActivityIndicator} from 'react-native';
 import Loader from '../custom-fields/loader';
 import DatePicker from 'react-native-datepicker';
+
+import {YellowBox} from 'react-native';
+import _ from 'lodash';
+
+YellowBox.ignoreWarnings(['componentWillReceiveProps']);
+const _console = _.clone(console);
+console.warn = message => {
+  if (message.indexOf('componentWillReceiveProps') <= -1) {
+    _console.warn(message);
+  }
+};
 
 const AddTrip = () => {
   const [selectedValue, setSelectedValue] = useState('');
@@ -85,7 +96,7 @@ const AddTrip = () => {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Text style={styles.text}>Add Trip</Text>
       <Input
         labelValue={tripName}
@@ -219,7 +230,7 @@ const AddTrip = () => {
 
       <FormButton buttonTitle="Add Trip" onPress={() => {}} />
       {showLoading && <Loader></Loader>}
-    </View>
+    </ScrollView>
   );
 };
 
