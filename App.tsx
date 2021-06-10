@@ -15,12 +15,13 @@ import AddAgency from './src/components/agency/add-agency';
 import AgencyList from './src/components/agency/agency-list-component';
 import AgencyUpdate from './src/components/agency/agency-update-component';
 import LocationDetails from './src/components/location/location-details-component';
+import AddTrip from './src/components/trip/add-trip-component';
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return (
-    <Stack.Navigator initialRouteName="AgencyList">
+    <Stack.Navigator initialRouteName="AddTrip">
       <Stack.Screen
         name="Login"
         component={Login}
@@ -104,6 +105,8 @@ function MyStack() {
         component={AgencyList}
         options={{title: 'Agency List'}}
       />
+
+      <Stack.Screen name="AddTrip" component={AddTrip} options={{title: ''}} />
     </Stack.Navigator>
   );
 }
