@@ -19,7 +19,7 @@ import Loader from '../custom-fields/loader';
 
 const LocationList = () => {
   const navigation = useNavigation();
-  const [locationList, setLocationList] = useState([]);
+  const [locationList, setLocationList] = useState([] as any);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const ref = firestore().collection('location');
@@ -55,7 +55,7 @@ const LocationList = () => {
     }
   }, [isFocused]);
 
-  const deleteLocation = id => {
+  const deleteLocation = (id: string) => {
     console.log(id);
     const dbRef = ref.doc(id);
     dbRef
@@ -81,7 +81,7 @@ const LocationList = () => {
           color="#6495ed"></Button>
       </View>
       {locationList &&
-        locationList.map((item: any, i) => (
+        locationList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
               <ListItem.Title>City: {item.city}</ListItem.Title>

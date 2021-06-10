@@ -17,25 +17,28 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 
-const CountryDetails = ({route}: {route: any}) => {
+const LocationDetails = ({route}: {route: any}) => {
   const navigation = useNavigation();
-  const [countryName, setCountryName] = useState('');
+  const [city, setCityName] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('country');
+  const ref = firestore().collection('location');
 
-  const getCountry = () => {
+  const getLocation = () => {
     const dbRef = ref.doc(route.params.id);
     dbRef
       .get()
       .then((response: any) => {
         console.log(response);
         if (response.exists) {
-          const country = response.data();
-          console.log(country);
-          setCountryName(country.name);
+          const location = response.data();
+          console.log(location);
+          setCityName(location.city);
+          setStreetAddress(location.streetAddress);
         } else {
-          console.log('Country does not exist!');
+          console.log('Location does not exist!');
         }
       })
       .catch((error: any) => {
@@ -45,14 +48,15 @@ const CountryDetails = ({route}: {route: any}) => {
   };
 
   useEffect(() => {
-    getCountry();
+    getLocation();
   }, []);
 
   return (
     <ScrollView style={styles.container}>
       <ListItem bottomDivider>
         <ListItem.Content>
-          <ListItem.Title>Country Name: {countryName} </ListItem.Title>
+          <ListItem.Title>City: {city} </ListItem.Title>
+          <ListItem.Title>Street Address: {streetAddress} </ListItem.Title>
         </ListItem.Content>
       </ListItem>
       <Text>{showLoading}</Text>
@@ -61,7 +65,7 @@ const CountryDetails = ({route}: {route: any}) => {
   );
 };
 
-export default CountryDetails;
+export default LocationDetails;
 
 const styles = StyleSheet.create({
   logo: {

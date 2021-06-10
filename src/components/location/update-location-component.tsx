@@ -14,13 +14,13 @@ import firebase from '@react-native-firebase/app';
 import {ActivityIndicator} from 'react-native';
 import Loader from '../custom-fields/loader';
 
-const UpdateLocation = ({route}) => {
+const UpdateLocation = ({route}: {route: any}) => {
   const refCountry = firestore().collection('country');
   const refLocation = firestore().collection('location');
   const [selectedValue, setSelectedValue] = useState('');
   const navigation = useNavigation();
 
-  const [countryList, setCountryList] = useState([]);
+  const [countryList, setCountryList] = useState([] as any);
 
   const [streetAddress, setStreetAddress] = useState('');
   const [city, setCity] = useState('');
@@ -76,7 +76,7 @@ const UpdateLocation = ({route}) => {
     getLocation();
   }, []);
 
-  const updateLocation = id => {
+  const updateLocation = (id: string) => {
     const dbRef = refLocation.doc(id);
     dbRef
       .set({
@@ -123,7 +123,7 @@ const UpdateLocation = ({route}) => {
               }
             }}>
             <Picker.Item label="Select Country" value="0" />
-            {countryList.map((item: any, i) => (
+            {countryList.map((item: any, i: number) => (
               <Picker.Item key={i} label={item.name} value={item.id} />
             ))}
           </Picker>

@@ -19,7 +19,7 @@ import Loader from '../custom-fields/loader';
 
 const AgencyList = () => {
   const navigation = useNavigation();
-  const [agencyList, setAgencyList] = useState([]);
+  const [agencyList, setAgencyList] = useState([] as any);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const ref = firestore().collection('agency');
@@ -54,7 +54,7 @@ const AgencyList = () => {
     }
   }, [isFocused]);
 
-  const deleteAgency = id => {
+  const deleteAgency = (id: string) => {
     console.log(id);
     const dbRef = ref.doc(id);
     dbRef
@@ -80,7 +80,7 @@ const AgencyList = () => {
           color="#6495ed"></Button>
       </View>
       {agencyList &&
-        agencyList.map((item: any, i) => (
+        agencyList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
               <ListItem.Title>Agency Name: {item.name}</ListItem.Title>
@@ -99,6 +99,17 @@ const AgencyList = () => {
                     }}
                     title="Delete"
                     color="#ff0000"
+                  />
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Button
+                    onPress={() => {
+                      navigation.navigate('LocationDetails', {
+                        id: item.locationId,
+                      });
+                    }}
+                    title="View Location Details"
+                    color="#87ceeb"
                   />
                 </View>
               </View>

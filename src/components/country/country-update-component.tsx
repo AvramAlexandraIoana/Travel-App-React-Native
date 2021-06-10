@@ -5,7 +5,7 @@ import FormButton from '../custom-fields/form-button';
 import Input from '../custom-fields/input';
 import firestore from '@react-native-firebase/firestore';
 
-const CountryUpdate = ({route}) => {
+const CountryUpdate = ({route}: {route: any}) => {
   const navigation = useNavigation();
 
   const ref = firestore().collection('country');

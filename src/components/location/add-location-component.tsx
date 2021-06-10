@@ -22,8 +22,7 @@ const AddLocation = () => {
   const [selectedValue, setSelectedValue] = useState('');
   const navigation = useNavigation<screenProp>();
 
-  const [countryList, setCountryList] = useState([]);
-
+  const [countryList, setCountryList] = useState([] as any);
   const [streetAddress, setStreetAddress] = useState('');
   const [city, setCity] = useState('');
   const [countryId, setCountryId] = useState('');
@@ -106,7 +105,7 @@ const AddLocation = () => {
               }
             }}>
             <Picker.Item label="Select Country" value="0" />
-            {countryList.map((item: any, i) => (
+            {countryList.map((item: any, i: number) => (
               <Picker.Item key={i} label={item.name} value={item.id} />
             ))}
           </Picker>

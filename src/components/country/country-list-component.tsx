@@ -21,7 +21,7 @@ type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
 
 const CountryList = () => {
   const navigation = useNavigation();
-  const [countryList, setCountryList] = useState([]);
+  const [countryList, setCountryList] = useState([] as any);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
   const ref = firestore().collection('country');
@@ -66,7 +66,7 @@ const CountryList = () => {
     }
   }, [isFocused]);
 
-  const deleteCountry = id => {
+  const deleteCountry = (id: string) => {
     console.log(id);
     const dbRef = ref.doc(id);
     dbRef
@@ -92,7 +92,7 @@ const CountryList = () => {
           color="#6495ed"></Button>
       </View>
       {countryList &&
-        countryList.map((item: any, i) => (
+        countryList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
               <ListItem.Title>Country Name: {item.name}</ListItem.Title>

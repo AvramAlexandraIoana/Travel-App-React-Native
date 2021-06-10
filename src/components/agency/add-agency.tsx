@@ -12,9 +12,11 @@ import Loader from '../custom-fields/loader';
 import {Picker} from '@react-native-picker/picker';
 
 const AddAgency = () => {
+  const navigation = useNavigation();
+
   const [agencyName, setAgencyName] = useState('');
   const [locationId, setLocationId] = useState('');
-  const [locationList, setLocationList] = useState([]);
+  const [locationList, setLocationList] = useState([] as any);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
 
@@ -51,6 +53,7 @@ const AddAgency = () => {
         locationId: locationId,
       })
       .then((response: any) => {
+        navigation.navigate('AddAgency');
         console.log('Agentie adaugata cu succes');
         console.log(response);
       })
@@ -87,7 +90,7 @@ const AddAgency = () => {
               }
             }}>
             <Picker.Item label="Select City" value="0" />
-            {locationList.map((item: any, i) => (
+            {locationList.map((item: any, i: number) => (
               <Picker.Item key={i} label={item.city} value={item.id} />
             ))}
           </Picker>

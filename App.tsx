@@ -14,6 +14,7 @@ import CountryDetails from './src/components/country/country-details-component';
 import AddAgency from './src/components/agency/add-agency';
 import AgencyList from './src/components/agency/agency-list-component';
 import AgencyUpdate from './src/components/agency/agency-update-component';
+import LocationDetails from './src/components/location/location-details-component';
 
 const Stack = createStackNavigator();
 
@@ -91,6 +92,13 @@ function MyStack() {
         component={AgencyUpdate}
         options={{title: ''}}
       />
+
+      <Stack.Screen
+        name="LocationDetails"
+        component={LocationDetails}
+        options={{title: 'Location Details'}}
+      />
+
       <Stack.Screen
         name="AgencyList"
         component={AgencyList}

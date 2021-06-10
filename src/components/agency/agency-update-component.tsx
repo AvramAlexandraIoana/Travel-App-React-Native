@@ -11,12 +11,12 @@ import Input from '../custom-fields/input';
 import Loader from '../custom-fields/loader';
 import {Picker} from '@react-native-picker/picker';
 
-const AgencyUpdate = ({route}) => {
+const AgencyUpdate = ({route}: {route: any}) => {
   const navigation = useNavigation();
 
   const [agencyName, setAgencyName] = useState('');
   const [locationId, setLocationId] = useState('');
-  const [locationList, setLocationList] = useState([]);
+  const [locationList, setLocationList] = useState([] as any);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
 
@@ -109,7 +109,7 @@ const AgencyUpdate = ({route}) => {
               }
             }}>
             <Picker.Item label="Select City" value="0" />
-            {locationList.map((item: any, i) => (
+            {locationList.map((item: any, i: number) => (
               <Picker.Item key={i} label={item.city} value={item.id} />
             ))}
           </Picker>
