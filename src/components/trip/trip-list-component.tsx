@@ -16,32 +16,39 @@ import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
+import Moment from 'moment';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
 
 const TripList = () => {
   const navigation = useNavigation();
-  const [countryList, setCountryList] = useState([] as any);
+  const [tripList, setTripList] = useState([] as any);
   const [errorMessage, setErrorMessage] = useState('');
   const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('country');
+  const ref = firestore().collection('trip');
   const isFocused = useIsFocused();
 
-  const getCountryList = async () => {
+  const getTripList = async () => {
     setShowLoading(true);
     try {
       var list: any = [];
       var snapshot = await ref.get();
       snapshot.forEach(res => {
-        const {name} = res.data();
+        const {name, price, duration, numberOfSeats, startDate, endDate} =
+          res.data();
         list.push({
           id: res.id,
           name,
+          price,
+          duration,
+          numberOfSeats,
+          startDate,
+          endDate,
         });
       });
       console.log(list);
       setShowLoading(false);
-      setCountryList([...list]);
+      setTripList([...list]);
     } catch (e) {
       console.log(e);
       setErrorMessage('Error');
@@ -51,18 +58,18 @@ const TripList = () => {
   useEffect(() => {
     if (isFocused) {
       console.log('called');
-      getCountryList();
+      getTripList();
     }
   }, [isFocused]);
 
-  const deleteCountry = (id: string) => {
+  const deleteTrip = (id: string) => {
     console.log(id);
     const dbRef = ref.doc(id);
     dbRef
       .delete()
       .then(res => {
-        console.log('Country removed');
-        getCountryList();
+        console.log('Trip removed');
+        getTripList();
       })
       .catch(error => {
         console.log(error);
@@ -75,20 +82,27 @@ const TripList = () => {
       <View>
         <Button
           onPress={() => {
-            navigation.navigate('AddCountry');
+            navigation.navigate('AddTrip');
           }}
-          title="Add Country"
+          title="Add Trip"
           color="#6495ed"></Button>
       </View>
-      {countryList &&
-        countryList.map((item: any, i: number) => (
+      {tripList &&
+        tripList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
-              <ListItem.Title>Country Name: {item.name}</ListItem.Title>
+              <ListItem.Title>Trip Name: {item.name}</ListItem.Title>
+              <ListItem.Title>Price: {item.price} Lei</ListItem.Title>
+              <ListItem.Title>Duration: {item.duration} Days</ListItem.Title>
+              <ListItem.Title>
+                Number of Seats: {item.numberOfSeats}
+              </ListItem.Title>
+              <ListItem.Title>Start Date: {item.startDate}</ListItem.Title>
+              <ListItem.Title>End Date: {item.endDate}</ListItem.Title>
               <View style={styles.footerWrapper}>
                 <Button
                   onPress={() => {
-                    navigation.navigate('CountryUpdate', {id: item.id});
+                    navigation.navigate('UpdateTrip', {id: item.id});
                   }}
                   title="Update"
                   color="#ff8c00"
@@ -96,7 +110,7 @@ const TripList = () => {
                 <View style={{marginLeft: 10}}>
                   <Button
                     onPress={() => {
-                      deleteCountry(item.id);
+                      deleteTrip(item.id);
                     }}
                     title="Delete"
                     color="#ff0000"

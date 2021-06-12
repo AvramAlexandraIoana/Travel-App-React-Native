@@ -18,6 +18,7 @@ import AddTrip from './src/components/trip/add-trip-component';
 import TripList from './src/components/trip/trip-list-component';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
+import UpdateTrip from './src/components/trip/update-trip-component';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -25,7 +26,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="AddTrip">
+      <Drawer.Navigator initialRouteName="TripList">
         <Drawer.Screen
           name="Login"
           component={Login}
@@ -88,6 +89,11 @@ export default function App() {
           name="AddTrip"
           component={AddTrip}
           options={{title: 'Add Trip'}}
+        />
+        <Drawer.Screen
+          name="UpdateTrip"
+          component={UpdateTrip}
+          options={{title: 'Update Trip'}}
         />
         <Drawer.Screen
           name="TripList"
