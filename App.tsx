@@ -16,6 +16,7 @@ import AgencyList from './src/components/agency/agency-list-component';
 import AgencyUpdate from './src/components/agency/agency-update-component';
 import LocationDetails from './src/components/location/location-details-component';
 import AddTrip from './src/components/trip/add-trip-component';
+import TripList from './src/components/trip/trip-list-component';
 
 const Stack = createStackNavigator();
 
@@ -107,6 +108,11 @@ function MyStack() {
       />
 
       <Stack.Screen name="AddTrip" component={AddTrip} options={{title: ''}} />
+      <Stack.Screen
+        name="TripList"
+        component={TripList}
+        options={{title: 'Trip List'}}
+      />
     </Stack.Navigator>
   );
 }

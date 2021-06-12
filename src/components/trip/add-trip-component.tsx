@@ -46,6 +46,7 @@ const AddTrip = () => {
 
   const refAgency = firestore().collection('agency');
   const refLocation = firestore().collection('location');
+  const refTrip = firestore().collection('trip');
 
   const getLocationList = async () => {
     setShowLoading(true);
@@ -90,13 +91,36 @@ const AddTrip = () => {
     }
   };
 
+  const addTrip = () => {
+    refTrip
+      .add({
+        name: tripName,
+        duration: duration,
+        numberOfSeats: numberOfSeats,
+        price: price,
+        startDate: startDate,
+        endDate: endDate,
+        agencyId: agencyId,
+        locationId: locationId,
+      })
+      .then((response: any) => {
+        navigation.navigate('TripList');
+        console.log('Trip adaugata cu succes');
+        console.log(response);
+      })
+      .catch((error: any) => {
+        console.log('Eroare');
+        setErrorMessage(errorMessage);
+      });
+  };
+
   useEffect(() => {
     getLocationList();
     getAgencyList();
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.text}>Add Trip</Text>
       <Input
         labelValue={tripName}
@@ -110,10 +134,12 @@ const AddTrip = () => {
         onChangeText={(price: string) => setPrice(price)}
         placeholderText="Price"
         autoCapitalize="none"
+        keyboardType="numeric"
         autoCorrect={false}
       />
       <Input
         labelValue={numberOfSeats}
+        keyboardType="numeric"
         onChangeText={(numberOfSeats: string) =>
           setNumberOfSeats(numberOfSeats)
         }
@@ -123,6 +149,7 @@ const AddTrip = () => {
       />
       <Input
         labelValue={duration}
+        keyboardType="numeric"
         onChangeText={(duration: string) => setDuration(duration)}
         placeholderText="Duration"
         autoCapitalize="none"
@@ -228,9 +255,14 @@ const AddTrip = () => {
         </View>
       }
 
-      <FormButton buttonTitle="Add Trip" onPress={() => {}} />
+      <FormButton
+        buttonTitle="Add Trip"
+        onPress={() => {
+          addTrip();
+        }}
+      />
       {showLoading && <Loader></Loader>}
-    </ScrollView>
+    </View>
   );
 };
 
