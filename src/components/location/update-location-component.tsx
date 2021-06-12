@@ -13,6 +13,7 @@ import {count} from 'console';
 import firebase from '@react-native-firebase/app';
 import {ActivityIndicator} from 'react-native';
 import Loader from '../custom-fields/loader';
+import {Icon} from 'react-native-elements';
 
 const UpdateLocation = ({route}: {route: any}) => {
   const refCountry = firestore().collection('country');
@@ -95,6 +96,22 @@ const UpdateLocation = ({route}: {route: any}) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Icon
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
       <Text style={styles.text}>Add Location</Text>
       <Input
         labelValue={city}
@@ -145,6 +162,11 @@ const UpdateLocation = ({route}: {route: any}) => {
 export default UpdateLocation;
 
 const styles = StyleSheet.create({
+  backContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 0,
+  },
   container: {
     backgroundColor: '#f9fafd',
     flex: 1,

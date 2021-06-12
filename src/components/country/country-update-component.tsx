@@ -4,6 +4,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import FormButton from '../custom-fields/form-button';
 import Input from '../custom-fields/input';
 import firestore from '@react-native-firebase/firestore';
+import {Icon} from 'react-native-elements';
 
 const CountryUpdate = ({route}: {route: any}) => {
   const navigation = useNavigation();
@@ -53,6 +54,22 @@ const CountryUpdate = ({route}: {route: any}) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Icon
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
       <Text style={styles.text}>Update country</Text>
       <Input
         labelValue={countryName}
@@ -74,6 +91,11 @@ const CountryUpdate = ({route}: {route: any}) => {
 export default CountryUpdate;
 
 const styles = StyleSheet.create({
+  backContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 0,
+  },
   container: {
     backgroundColor: '#f9fafd',
     flex: 1,

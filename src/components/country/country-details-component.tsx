@@ -16,6 +16,7 @@ import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
+import FormButton from '../custom-fields/form-button';
 
 const CountryDetails = ({route}: {route: any}) => {
   const navigation = useNavigation();
@@ -49,7 +50,26 @@ const CountryDetails = ({route}: {route: any}) => {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Icon
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>Country Details</Text>
+      </View>
       <ListItem bottomDivider>
         <ListItem.Content>
           <ListItem.Title>Country Name: {countryName} </ListItem.Title>
@@ -57,22 +77,30 @@ const CountryDetails = ({route}: {route: any}) => {
       </ListItem>
       <Text>{showLoading}</Text>
       {showLoading && <Loader></Loader>}
-    </ScrollView>
+    </View>
   );
 };
 
 export default CountryDetails;
 
 const styles = StyleSheet.create({
+  backContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 0,
+  },
   logo: {
     height: 150,
     width: windowWidth,
     resizeMode: 'cover',
   },
+  textContainer: {
+    backgroundColor: 'white',
+  },
   text: {
-    fontFamily: 'Kufam-SemiBoldItalic',
-    fontSize: 28,
+    fontSize: 20,
     marginBottom: 10,
+    marginLeft: 10,
     color: '#051d5f',
   },
   navButton: {

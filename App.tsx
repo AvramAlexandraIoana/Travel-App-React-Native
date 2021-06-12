@@ -37,10 +37,16 @@ export default function App() {
           component={SignUp}
           options={{title: 'SignUp'}}
         />
+
         <Drawer.Screen
           name="AddCountry"
           component={AddCountry}
           options={{title: 'Add Country'}}
+        />
+        <Drawer.Screen
+          name="CountryDetails"
+          component={CountryDetails}
+          options={{title: 'Country Details'}}
         />
         <Drawer.Screen
           name="CountryList"
@@ -59,6 +65,11 @@ export default function App() {
           options={{title: 'Add Location'}}
         />
         <Drawer.Screen
+          name="LocationDetails"
+          component={LocationDetails}
+          options={{title: 'Location Details'}}
+        />
+        <Drawer.Screen
           name="LocationList"
           component={LocationList}
           options={{title: 'Location List'}}
@@ -74,6 +85,7 @@ export default function App() {
           component={AddAgency}
           options={{title: 'Add Agency'}}
         />
+
         <Drawer.Screen
           name="AgencyList"
           component={AgencyList}

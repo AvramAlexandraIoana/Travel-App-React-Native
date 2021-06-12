@@ -10,6 +10,7 @@ import FormInput from '../custom-fields/form-input';
 import Input from '../custom-fields/input';
 import Loader from '../custom-fields/loader';
 import {Picker} from '@react-native-picker/picker';
+import {Icon} from 'react-native-elements';
 
 const AddAgency = () => {
   const navigation = useNavigation();
@@ -69,6 +70,22 @@ const AddAgency = () => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Icon
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
       <Text style={styles.text}>Add Agency</Text>
       <Input
         labelValue={agencyName}
@@ -111,6 +128,11 @@ const AddAgency = () => {
 export default AddAgency;
 
 const styles = StyleSheet.create({
+  backContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 0,
+  },
   container: {
     backgroundColor: '#f9fafd',
     flex: 1,

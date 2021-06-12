@@ -34,8 +34,16 @@ const TripList = () => {
       var list: any = [];
       var snapshot = await ref.get();
       snapshot.forEach(res => {
-        const {name, price, duration, numberOfSeats, startDate, endDate} =
-          res.data();
+        const {
+          name,
+          price,
+          duration,
+          numberOfSeats,
+          startDate,
+          endDate,
+          locationId,
+          agencyId,
+        } = res.data();
         list.push({
           id: res.id,
           name,
@@ -44,6 +52,8 @@ const TripList = () => {
           numberOfSeats,
           startDate,
           endDate,
+          locationId,
+          agencyId,
         });
       });
       console.log(list);
@@ -114,6 +124,17 @@ const TripList = () => {
                     }}
                     title="Delete"
                     color="#ff0000"
+                  />
+                </View>
+                <View style={{marginLeft: 10}}>
+                  <Button
+                    onPress={() => {
+                      navigation.navigate('LocationDetails', {
+                        id: item.locationId,
+                      });
+                    }}
+                    title="View Location Details"
+                    color="#87ceeb"
                   />
                 </View>
               </View>

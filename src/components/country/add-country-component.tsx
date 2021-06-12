@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import FormButton from '../custom-fields/form-button';
 import FormInput from '../custom-fields/form-input';
 import Input from '../custom-fields/input';
+import {Icon} from 'react-native-elements';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'AddCountry'>;
 
@@ -35,6 +36,22 @@ const AddCountry = () => {
   };
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Icon
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
       <Text style={styles.text}>Add country</Text>
       <Input
         labelValue={countryName}
@@ -56,6 +73,11 @@ const AddCountry = () => {
 export default AddCountry;
 
 const styles = StyleSheet.create({
+  backContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 0,
+  },
   container: {
     backgroundColor: '#f9fafd',
     flex: 1,

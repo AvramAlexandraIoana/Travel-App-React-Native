@@ -17,6 +17,7 @@ import DatePicker from 'react-native-datepicker';
 
 import {YellowBox} from 'react-native';
 import _ from 'lodash';
+import {Icon} from 'react-native-elements';
 
 YellowBox.ignoreWarnings(['componentWillReceiveProps']);
 const _console = _.clone(console);
@@ -121,6 +122,23 @@ const AddTrip = () => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Icon
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
+
       <Text style={styles.text}>Add Trip</Text>
       <Input
         labelValue={tripName}
@@ -269,6 +287,11 @@ const AddTrip = () => {
 export default AddTrip;
 
 const styles = StyleSheet.create({
+  backContainer: {
+    position: 'absolute',
+    left: 10,
+    top: 0,
+  },
   container: {
     backgroundColor: '#f9fafd',
     flex: 1,

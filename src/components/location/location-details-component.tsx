@@ -9,6 +9,7 @@ import {
   FlatList,
   ScrollView,
   Alert,
+  TouchableOpacity,
 } from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../RootStackParams';
@@ -16,6 +17,7 @@ import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
+import FormButton from '../custom-fields/form-button';
 
 const LocationDetails = ({route}: {route: any}) => {
   const navigation = useNavigation();
@@ -53,6 +55,25 @@ const LocationDetails = ({route}: {route: any}) => {
 
   return (
     <ScrollView style={styles.container}>
+      <View
+        style={{
+          backgroundColor: 'white',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Icon
+          name="arrow-left"
+          size={20}
+          color="black"
+          type="entypo"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>Location Details</Text>
+      </View>
       <ListItem bottomDivider>
         <ListItem.Content>
           <ListItem.Title>City: {city} </ListItem.Title>
@@ -68,15 +89,18 @@ const LocationDetails = ({route}: {route: any}) => {
 export default LocationDetails;
 
 const styles = StyleSheet.create({
+  textContainer: {
+    backgroundColor: 'white',
+  },
   logo: {
     height: 150,
     width: windowWidth,
     resizeMode: 'cover',
   },
   text: {
-    fontFamily: 'Kufam-SemiBoldItalic',
-    fontSize: 28,
+    fontSize: 20,
     marginBottom: 10,
+    marginLeft: 10,
     color: '#051d5f',
   },
   navButton: {
