@@ -19,6 +19,7 @@ import TripList from './src/components/trip/trip-list-component';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {NavigationContainer} from '@react-navigation/native';
 import UpdateTrip from './src/components/trip/update-trip-component';
+import AgencyDetails from './src/components/agency/agency-details-component';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -84,6 +85,11 @@ export default function App() {
           name="AddAgency"
           component={AddAgency}
           options={{title: 'Add Agency'}}
+        />
+        <Drawer.Screen
+          name="AgencyDetails"
+          component={AgencyDetails}
+          options={{title: 'Agency Details'}}
         />
 
         <Drawer.Screen

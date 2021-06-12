@@ -137,6 +137,17 @@ const TripList = () => {
                     color="#87ceeb"
                   />
                 </View>
+                <View style={{marginTop: 10}}>
+                  <Button
+                    onPress={() => {
+                      navigation.navigate('AgencyDetails', {
+                        id: item.agencyId,
+                      });
+                    }}
+                    title="View Agency Details"
+                    color="#6495ed"
+                  />
+                </View>
               </View>
             </ListItem.Content>
           </ListItem>
