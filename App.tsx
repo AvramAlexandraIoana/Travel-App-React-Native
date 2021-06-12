@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import SignUp from './src/components/auth/sign-up-component';
 import Login from './src/components/auth/login-component';
@@ -17,110 +16,85 @@ import AgencyUpdate from './src/components/agency/agency-update-component';
 import LocationDetails from './src/components/location/location-details-component';
 import AddTrip from './src/components/trip/add-trip-component';
 import TripList from './src/components/trip/trip-list-component';
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {NavigationContainer} from '@react-navigation/native';
 
+const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
-
-function MyStack() {
-  return (
-    <Stack.Navigator initialRouteName="AddTrip">
-      <Stack.Screen
-        name="Login"
-        component={Login}
-        options={{title: 'Login Page'}}
-      />
-
-      <Stack.Screen
-        name="SignUp"
-        component={SignUp}
-        options={{title: 'SignUp Page'}}
-      />
-
-      <Stack.Screen
-        name="Dashboard"
-        component={Dashboard}
-        options={{title: 'Dashboard Page'}}
-      />
-
-      <Stack.Screen
-        name="AddCountry"
-        component={AddCountry}
-        options={{title: ''}}
-      />
-
-      <Stack.Screen
-        name="CountryDetails"
-        component={CountryDetails}
-        options={{title: 'Country Details'}}
-      />
-
-      <Stack.Screen
-        name="CountryList"
-        component={CountryList}
-        options={{title: 'Country List'}}
-      />
-
-      <Stack.Screen
-        name="CountryUpdate"
-        component={CountryUpdate}
-        options={{title: ''}}
-      />
-
-      <Stack.Screen
-        name="AddLocation"
-        component={AddLocation}
-        options={{title: ''}}
-      />
-
-      <Stack.Screen
-        name="UpdateLocation"
-        component={UpdateLocation}
-        options={{title: ''}}
-      />
-
-      <Stack.Screen
-        name="LocationList"
-        component={LocationList}
-        options={{title: 'Location List'}}
-      />
-
-      <Stack.Screen
-        name="AddAgency"
-        component={AddAgency}
-        options={{title: ''}}
-      />
-
-      <Stack.Screen
-        name="AgencyUpdate"
-        component={AgencyUpdate}
-        options={{title: ''}}
-      />
-
-      <Stack.Screen
-        name="LocationDetails"
-        component={LocationDetails}
-        options={{title: 'Location Details'}}
-      />
-
-      <Stack.Screen
-        name="AgencyList"
-        component={AgencyList}
-        options={{title: 'Agency List'}}
-      />
-
-      <Stack.Screen name="AddTrip" component={AddTrip} options={{title: ''}} />
-      <Stack.Screen
-        name="TripList"
-        component={TripList}
-        options={{title: 'Trip List'}}
-      />
-    </Stack.Navigator>
-  );
-}
 
 export default function App() {
   return (
     <NavigationContainer>
-      <MyStack />
+      <Drawer.Navigator initialRouteName="AddTrip">
+        <Drawer.Screen
+          name="Login"
+          component={Login}
+          options={{title: 'Login'}}
+        />
+        <Drawer.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{title: 'SignUp'}}
+        />
+        <Drawer.Screen
+          name="AddCountry"
+          component={AddCountry}
+          options={{title: 'Add Country'}}
+        />
+        <Drawer.Screen
+          name="CountryList"
+          component={CountryList}
+          options={{title: 'Country List'}}
+        />
+        <Drawer.Screen
+          name="CountryUpdate"
+          component={CountryUpdate}
+          options={{title: 'Country Update'}}
+        />
+
+        <Drawer.Screen
+          name="AddLocation"
+          component={AddLocation}
+          options={{title: 'Add Location'}}
+        />
+        <Drawer.Screen
+          name="LocationList"
+          component={LocationList}
+          options={{title: 'Location List'}}
+        />
+        <Drawer.Screen
+          name="UpdateLocation"
+          component={UpdateLocation}
+          options={{title: 'Update Location'}}
+        />
+
+        <Drawer.Screen
+          name="AddAgency"
+          component={AddAgency}
+          options={{title: 'Add Agency'}}
+        />
+        <Drawer.Screen
+          name="AgencyList"
+          component={AgencyList}
+          options={{title: 'Agency List'}}
+        />
+        <Drawer.Screen
+          name="AgencyUpdate"
+          component={AgencyUpdate}
+          options={{title: 'Agency Update'}}
+        />
+
+        <Drawer.Screen
+          name="AddTrip"
+          component={AddTrip}
+          options={{title: 'Add Trip'}}
+        />
+        <Drawer.Screen
+          name="TripList"
+          component={TripList}
+          options={{title: 'Trip List'}}
+        />
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
