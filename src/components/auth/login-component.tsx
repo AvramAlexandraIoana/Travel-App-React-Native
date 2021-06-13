@@ -45,20 +45,6 @@ const Login = () => {
 
   const {showLoading, errorMessage, loginUser} = useContext(GlobalContext);
 
-  // Set an initializing state whilst Firebase connects
-  const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState();
-
-  // Handle user state changes
-  function onAuthStateChanged(user) {
-    setUser(user);
-    console.log(user);
-    if (user) {
-      navigation.navigate('TripList');
-    }
-    if (initializing) setInitializing(false);
-  }
-
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
