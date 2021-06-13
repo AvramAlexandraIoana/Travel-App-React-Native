@@ -31,13 +31,18 @@ const CountryList = () => {
     deleteCountry,
     showLoading,
     errorMessage,
+    user,
+    setUser,
   } = useContext(GlobalContext);
   console.log(countryList);
 
   const logOut = () => {
     auth()
       .signOut()
-      .then(() => console.log('User signed out!'))
+      .then(() => {
+        console.log('User signed out!');
+        setUser(null);
+      })
       .catch(error => {
         console.log(error);
         errorMessage(error);
@@ -53,52 +58,60 @@ const CountryList = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddCountry');
-          }}
-          title="Add Country"
-          color="#6495ed"></Button>
-      </View>
+      {user && (
+        <View>
+          <Button
+            onPress={() => {
+              navigation.navigate('AddCountry');
+            }}
+            title="Add Country"
+            color="#6495ed"></Button>
+        </View>
+      )}
+
       {countryList &&
         countryList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
               <ListItem.Title>Country Name: {item.name}</ListItem.Title>
-              <View style={styles.footerWrapper}>
-                <Button
-                  onPress={() => {
-                    navigation.navigate('CountryUpdate', {id: item.id});
-                  }}
-                  title="Update"
-                  color="#ff8c00"
-                />
-                <View style={{marginLeft: 10}}>
+              {user && user.uid == item.userId && (
+                <View style={styles.footerWrapper}>
                   <Button
                     onPress={() => {
-                      deleteCountry(item.id);
+                      navigation.navigate('CountryUpdate', {id: item.id});
                     }}
-                    title="Delete"
-                    color="#ff0000"
+                    title="Update"
+                    color="#ff8c00"
                   />
+                  <View style={{marginLeft: 10}}>
+                    <Button
+                      onPress={() => {
+                        deleteCountry(item.id);
+                      }}
+                      title="Delete"
+                      color="#ff0000"
+                    />
+                  </View>
                 </View>
-              </View>
+              )}
             </ListItem.Content>
           </ListItem>
         ))}
 
-      <View>
-        <Button
-          onPress={() => {
-            logOut();
-            if (!errorMessage) {
-              navigation.navigate('Login');
-            }
-          }}
-          title="Log Out"
-          color="#6495ed"></Button>
-      </View>
+      {user && (
+        <View>
+          <Button
+            onPress={() => {
+              logOut();
+              if (!errorMessage) {
+                navigation.navigate('Login');
+              }
+            }}
+            title="Log Out"
+            color="#6495ed"></Button>
+        </View>
+      )}
+
       <Text>{showLoading}</Text>
       {showLoading && <Loader></Loader>}
     </ScrollView>

@@ -25,6 +25,7 @@ const AgencyList = () => {
     agencyList,
     setAgencyList,
     showLoading,
+    user,
     errorMessage,
     getAgencyList,
     deleteAgency,
@@ -39,36 +40,43 @@ const AgencyList = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddAgency');
-          }}
-          title="Add Agency"
-          color="#6495ed"></Button>
-      </View>
+      {user && (
+        <View>
+          <Button
+            onPress={() => {
+              navigation.navigate('AddAgency');
+            }}
+            title="Add Agency"
+            color="#6495ed"></Button>
+        </View>
+      )}
+
       {agencyList &&
         agencyList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
             <ListItem.Content>
               <ListItem.Title>Agency Name: {item.name}</ListItem.Title>
               <View style={styles.footerWrapper}>
-                <Button
-                  onPress={() => {
-                    navigation.navigate('AgencyUpdate', {id: item.id});
-                  }}
-                  title="Update"
-                  color="#ff8c00"
-                />
-                <View style={{marginLeft: 10}}>
-                  <Button
-                    onPress={() => {
-                      deleteAgency(item.id);
-                    }}
-                    title="Delete"
-                    color="#ff0000"
-                  />
-                </View>
+                {user && user.uid == item.userId && (
+                  <>
+                    <Button
+                      onPress={() => {
+                        navigation.navigate('AgencyUpdate', {id: item.id});
+                      }}
+                      title="Update"
+                      color="#ff8c00"
+                    />
+                    <View style={{marginLeft: 10}}>
+                      <Button
+                        onPress={() => {
+                          deleteAgency(item.id);
+                        }}
+                        title="Delete"
+                        color="#ff0000"
+                      />
+                    </View>
+                  </>
+                )}
                 <View style={{marginLeft: 10}}>
                   <Button
                     onPress={() => {

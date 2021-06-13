@@ -37,6 +37,7 @@ const TripList = () => {
     showLoading,
     getTripList,
     errorMessage,
+    user,
     deleteTrip,
   } = useContext(GlobalContext);
   const isFocused = useIsFocused();
@@ -98,14 +99,17 @@ const TripList = () => {
         <Text style={styles.buttonText}>Start Animation</Text>
       </TouchableOpacity>
 
-      <View>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddTrip');
-          }}
-          title="Add Trip"
-          color="#6495ed"></Button>
-      </View>
+      {user && (
+        <View style={styles.addButton}>
+          <Button
+            onPress={() => {
+              navigation.navigate('AddTrip');
+            }}
+            title="Add Trip"
+            color="#6495ed"></Button>
+        </View>
+      )}
+
       {tripList &&
         tripList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
@@ -119,44 +123,74 @@ const TripList = () => {
               <ListItem.Title>Start Date: {item.startDate}</ListItem.Title>
               <ListItem.Title>End Date: {item.endDate}</ListItem.Title>
               <View style={styles.footerWrapper}>
-                <Button
-                  onPress={() => {
-                    navigation.navigate('UpdateTrip', {id: item.id});
-                  }}
-                  title="Update"
-                  color="#ff8c00"
-                />
-                <View style={{marginLeft: 10}}>
-                  <Button
-                    onPress={() => {
-                      deleteTrip(item.id);
-                    }}
-                    title="Delete"
-                    color="#ff0000"
-                  />
-                </View>
-                <View style={{marginLeft: 10}}>
-                  <Button
-                    onPress={() => {
-                      navigation.navigate('LocationDetails', {
-                        id: item.locationId,
-                      });
-                    }}
-                    title="View Location Details"
-                    color="#87ceeb"
-                  />
-                </View>
-                <View style={{marginTop: 10}}>
-                  <Button
-                    onPress={() => {
-                      navigation.navigate('AgencyDetails', {
-                        id: item.agencyId,
-                      });
-                    }}
-                    title="View Agency Details"
-                    color="#6495ed"
-                  />
-                </View>
+                {user && user.uid == item.userId && (
+                  <>
+                    <Button
+                      onPress={() => {
+                        navigation.navigate('UpdateTrip', {id: item.id});
+                      }}
+                      title="Update"
+                      color="#ff8c00"
+                    />
+                    <View style={{marginLeft: 10}}>
+                      <Button
+                        onPress={() => {
+                          deleteTrip(item.id);
+                        }}
+                        title="Delete"
+                        color="#ff0000"
+                      />
+                    </View>
+                    <View style={{marginLeft: 10}}>
+                      <Button
+                        onPress={() => {
+                          navigation.navigate('LocationDetails', {
+                            id: item.locationId,
+                          });
+                        }}
+                        title="View Location Details"
+                        color="#87ceeb"
+                      />
+                    </View>
+                    <View style={{marginTop: 10}}>
+                      <Button
+                        onPress={() => {
+                          navigation.navigate('AgencyDetails', {
+                            id: item.agencyId,
+                          });
+                        }}
+                        title="View Agency Details"
+                        color="#6495ed"
+                      />
+                    </View>
+                  </>
+                )}
+                {user && user.uid != item.userId && (
+                  <>
+                    <View>
+                      <Button
+                        onPress={() => {
+                          navigation.navigate('LocationDetails', {
+                            id: item.locationId,
+                          });
+                        }}
+                        title="View Location Details"
+                        color="#87ceeb"
+                      />
+                    </View>
+                    <View style={{marginLeft: 10}}>
+                      <Button
+                        onPress={() => {
+                          navigation.navigate('AgencyDetails', {
+                            id: item.agencyId,
+                          });
+                        }}
+                        title="View Agency Details"
+                        color="#6495ed"
+                      />
+                    </View>
+                  </>
+                )}
               </View>
             </ListItem.Content>
           </ListItem>
@@ -246,5 +280,8 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     backgroundColor: 'transparent',
+  },
+  addButton: {
+    marginTop: 10,
   },
 });

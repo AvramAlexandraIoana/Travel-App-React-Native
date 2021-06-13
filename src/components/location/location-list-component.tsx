@@ -25,6 +25,7 @@ const LocationList = () => {
     getLocationList,
     deleteLocation,
     showLoading,
+    user,
     errorMessage,
   } = useContext(GlobalContext);
   console.log(locationList);
@@ -39,14 +40,17 @@ const LocationList = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <View>
-        <Button
-          onPress={() => {
-            navigation.navigate('AddLocation');
-          }}
-          title="Add Location"
-          color="#6495ed"></Button>
-      </View>
+      {user && (
+        <View>
+          <Button
+            onPress={() => {
+              navigation.navigate('AddLocation');
+            }}
+            title="Add Location"
+            color="#6495ed"></Button>
+        </View>
+      )}
+
       {locationList &&
         locationList.map((item: any, i: number) => (
           <ListItem key={i} bottomDivider>
@@ -55,23 +59,29 @@ const LocationList = () => {
               <ListItem.Title>
                 Street Adress: {item.streetAddress}
               </ListItem.Title>
+
               <View style={styles.footerWrapper}>
-                <Button
-                  onPress={() => {
-                    navigation.navigate('UpdateLocation', {id: item.id});
-                  }}
-                  title="Update"
-                  color="#ff8c00"
-                />
-                <View style={{marginLeft: 10}}>
-                  <Button
-                    onPress={() => {
-                      deleteLocation(item.id);
-                    }}
-                    title="Delete"
-                    color="#ff0000"
-                  />
-                </View>
+                {user && user.uid == item.userId && (
+                  <>
+                    <Button
+                      onPress={() => {
+                        navigation.navigate('UpdateLocation', {id: item.id});
+                      }}
+                      title="Update"
+                      color="#ff8c00"
+                    />
+                    <View style={{marginLeft: 10}}>
+                      <Button
+                        onPress={() => {
+                          deleteLocation(item.id);
+                        }}
+                        title="Delete"
+                        color="#ff0000"
+                      />
+                    </View>
+                  </>
+                )}
+
                 <View style={{marginLeft: 10}}>
                   <Button
                     onPress={() => {

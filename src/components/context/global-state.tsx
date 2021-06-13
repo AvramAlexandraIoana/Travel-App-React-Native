@@ -38,11 +38,17 @@ export const GlobalProvider = ({children}: {children: any}) => {
 
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState(null as any);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log(user);
+        setUser(user._user);
+      } else {
+        console.log('no user');
+      }
+    });
   }, []);
 
   const getCountryList = async () => {
@@ -51,10 +57,11 @@ export const GlobalProvider = ({children}: {children: any}) => {
       var list: any = [];
       var snapshot = await refCountry.get();
       snapshot.forEach(res => {
-        const {name} = res.data();
+        const {name, userId} = res.data();
         list.push({
           id: res.id,
           name,
+          userId,
         });
       });
       setCountryList(list);
@@ -137,12 +144,13 @@ export const GlobalProvider = ({children}: {children: any}) => {
       var list: any = [];
       var snapshot = await refLocation.get();
       snapshot.forEach(res => {
-        const {city, streetAddress, countryId} = res.data();
+        const {city, streetAddress, countryId, userId} = res.data();
         list.push({
           id: res.id,
           city,
           streetAddress,
           countryId,
+          userId,
         });
       });
       console.log(list);
@@ -240,11 +248,12 @@ export const GlobalProvider = ({children}: {children: any}) => {
       var list: any = [];
       var snapshot = await refAgency.get();
       snapshot.forEach(res => {
-        const {name, locationId} = res.data();
+        const {name, locationId, userId} = res.data();
         list.push({
           id: res.id,
           name,
           locationId,
+          userId,
         });
       });
       console.log(list);
@@ -341,6 +350,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
           endDate,
           locationId,
           agencyId,
+          userId,
         } = res.data();
         list.push({
           id: res.id,
@@ -352,6 +362,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
           endDate,
           locationId,
           agencyId,
+          userId,
         });
       });
       console.log(list);
@@ -572,6 +583,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
         doCreateUser,
         loginUser,
         user,
+        setUser,
       }}>
       {children}
     </GlobalContext.Provider>

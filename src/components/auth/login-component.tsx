@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {userInfo} from 'os';
 import React, {useContext, useEffect, useState} from 'react';
@@ -43,12 +43,22 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
-  const {showLoading, errorMessage, loginUser} = useContext(GlobalContext);
+  const {showLoading, errorMessage, loginUser, user, setUser} =
+    useContext(GlobalContext);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
+    auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log(user);
+        setUser(user._user);
+        navigation.navigate('TripList');
+      } else {
+        console.log('no user');
+      }
+    });
   }, []);
+
   const googleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
