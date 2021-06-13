@@ -36,6 +36,15 @@ export const GlobalProvider = ({children}: {children: any}) => {
   const [endDate, setEndDate] = useState('');
   const [agencyId, setAgencyId] = useState('');
 
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState(null as any);
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
   const getCountryList = async () => {
     setShowLoading(true);
     try {
@@ -81,6 +90,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
     refCountry
       .add({
         name: countryName,
+        userId: user && user.uid ? user.uid : '',
       })
       .then(response => {
         console.log('Tara adaugata cu succes');
@@ -97,6 +107,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
     dbRef
       .set({
         name: countryName,
+        userId: user && user.uid ? user.uid : '',
       })
       .then(response => {})
       .catch(error => {
@@ -168,6 +179,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
         streetAddress: streetAddress,
         city: city,
         countryId: countryId,
+        userId: user && user.uid ? user.uid : '',
       })
       .then((response: any) => {
         console.log('Locatia adaugata cu succes');
@@ -213,6 +225,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
         city: city,
         streetAddress: streetAddress,
         countryId: countryId,
+        userId: user && user.uid ? user.uid : '',
       })
       .then(response => {})
       .catch(error => {
@@ -250,6 +263,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
       .add({
         name: name,
         locationId: locationId,
+        userId: user && user.uid ? user.uid : '',
       })
       .then((response: any) => {
         console.log('Agentie adaugata cu succes');
@@ -303,6 +317,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
       .set({
         name: agencyName,
         locationId: locationId,
+        userId: user && user.uid ? user.uid : '',
       })
       .then(response => {})
       .catch(error => {
@@ -368,6 +383,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
         endDate: endDate,
         agencyId: agencyId,
         locationId: locationId,
+        userId: user && user.uid ? user.uid : '',
       })
       .then((response: any) => {
         console.log('Trip adaugata cu succes');
@@ -416,6 +432,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
         endDate: endDate,
         agencyId: agencyId,
         locationId: locationId,
+        userId: user && user.uid ? user.uid : '',
       })
       .then(response => {})
       .catch(error => {
@@ -467,6 +484,13 @@ export const GlobalProvider = ({children}: {children: any}) => {
       setShowLoading(false);
       console.error(e.message);
     }
+  };
+
+  // Handle user state changes
+  const onAuthStateChanged = (user: any) => {
+    setUser(user);
+    console.log(user);
+    if (initializing) setInitializing(false);
   };
 
   const loginUser = async (email: any, password: any) => {
@@ -547,6 +571,7 @@ export const GlobalProvider = ({children}: {children: any}) => {
         addTrip,
         doCreateUser,
         loginUser,
+        user,
       }}>
       {children}
     </GlobalContext.Provider>

@@ -16,9 +16,16 @@ type screenProp = StackNavigationProp<RootStackParamList, 'AddCountry'>;
 const AddCountry = () => {
   const ref = firestore().collection('country');
   const navigation = useNavigation<screenProp>();
-  const {addCountry, showLoading, errorMessage, countryName, setCountryName} =
-    useContext(GlobalContext);
+  const {
+    user,
+    addCountry,
+    showLoading,
+    errorMessage,
+    countryName,
+    setCountryName,
+  } = useContext(GlobalContext);
 
+  console.log(user.uid);
   const isFocused = useIsFocused();
 
   useEffect(() => {
