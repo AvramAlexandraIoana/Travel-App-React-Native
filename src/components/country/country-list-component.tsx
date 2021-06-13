@@ -17,6 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 import {GlobalContext, GlobalProvider} from '../context/global-state';
+import auth from '@react-native-firebase/auth';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
 
@@ -32,6 +33,16 @@ const CountryList = () => {
     errorMessage,
   } = useContext(GlobalContext);
   console.log(countryList);
+
+  const logOut = () => {
+    auth()
+      .signOut()
+      .then(() => console.log('User signed out!'))
+      .catch(error => {
+        console.log(error);
+        errorMessage(error);
+      });
+  };
 
   useEffect(() => {
     if (isFocused) {
@@ -76,6 +87,18 @@ const CountryList = () => {
             </ListItem.Content>
           </ListItem>
         ))}
+
+      <View>
+        <Button
+          onPress={() => {
+            logOut();
+            if (!errorMessage) {
+              navigation.navigate('Login');
+            }
+          }}
+          title="Log Out"
+          color="#6495ed"></Button>
+      </View>
       <Text>{showLoading}</Text>
       {showLoading && <Loader></Loader>}
     </ScrollView>

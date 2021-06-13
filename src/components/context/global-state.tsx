@@ -5,6 +5,7 @@ export const GlobalContext = createContext({} as any);
 
 //Provider Componennt
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 export const GlobalProvider = ({children}: {children: any}) => {
   const [showLoading, setShowLoading] = useState(false);
@@ -451,6 +452,38 @@ export const GlobalProvider = ({children}: {children: any}) => {
       });
   };
 
+  const doCreateUser = async (email: string, password: string) => {
+    setShowLoading(true);
+    try {
+      let response = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      if (response && response.user) {
+        setShowLoading(false);
+        console.log('Success ✅', 'Account created successfully');
+      }
+    } catch (e) {
+      setShowLoading(false);
+      console.error(e.message);
+    }
+  };
+
+  const loginUser = async (email: any, password: any) => {
+    setShowLoading(true);
+    try {
+      let response = await auth().signInWithEmailAndPassword(email, password);
+      console.log(response);
+      if (response && response.user) {
+        setShowLoading(false);
+        console.log('Success ✅', 'User sign in successfully');
+      }
+    } catch (e) {
+      setShowLoading(false);
+      console.error(e.message);
+    }
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -512,6 +545,8 @@ export const GlobalProvider = ({children}: {children: any}) => {
         updateTrip,
         getTrip,
         addTrip,
+        doCreateUser,
+        loginUser,
       }}>
       {children}
     </GlobalContext.Provider>

@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {userInfo} from 'os';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -23,6 +23,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import {GlobalContext} from '../context/global-state';
 type screenProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
 GoogleSignin.configure({
@@ -40,13 +41,28 @@ GoogleSignin.configure({
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    // initialize the Google SDK
-  }, []);
+  const {showLoading, errorMessage, loginUser} = useContext(GlobalContext);
 
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  // Handle user state changes
+  function onAuthStateChanged(user) {
+    setUser(user);
+    console.log(user);
+    if (user) {
+      navigation.navigate('TripList');
+    }
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
   const googleLogin = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -60,22 +76,6 @@ const Login = () => {
       navigation.navigate('TripList');
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const loginUser = async (email: any, password: any) => {
-    setShowLoading(true);
-    try {
-      let response = await auth().signInWithEmailAndPassword(email, password);
-      console.log(response);
-      if (response && response.user) {
-        setShowLoading(false);
-        console.log('Success ✅', 'User sign in successfully');
-        navigation.navigate('Dashboard');
-      }
-    } catch (e) {
-      setShowLoading(false);
-      console.error(e.message);
     }
   };
 
@@ -110,6 +110,9 @@ const Login = () => {
         buttonTitle="Login"
         onPress={() => {
           loginUser(email, password);
+          if (!errorMessage) {
+            navigation.navigate('TripList');
+          }
         }}
       />
 

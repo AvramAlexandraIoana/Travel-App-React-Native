@@ -1,6 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -18,33 +18,16 @@ import AuthService from '../../services/auth-service';
 import auth from '@react-native-firebase/auth';
 import SocialButton from '../custom-fields/social-button';
 import {GoogleSignin} from '@react-native-community/google-signin';
+import {GlobalContext} from '../context/global-state';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
+  const {showLoading, errorMessage, doCreateUser} = useContext(GlobalContext);
 
   const navigation = useNavigation<screenProp>();
-
-  const doCreateUser = async (email: string, password: string) => {
-    setShowLoading(true);
-    try {
-      let response = await auth().createUserWithEmailAndPassword(
-        email,
-        password,
-      );
-      if (response && response.user) {
-        setShowLoading(false);
-        console.log('Success ✅', 'Account created successfully');
-        navigation.navigate('Login');
-      }
-    } catch (e) {
-      setShowLoading(false);
-      console.error(e.message);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -75,6 +58,9 @@ const SignUp = () => {
         buttonTitle="Sign Up"
         onPress={() => {
           doCreateUser(email, password);
+          if (!errorMessage) {
+            navigation.navigate('Login');
+          }
         }}
       />
 

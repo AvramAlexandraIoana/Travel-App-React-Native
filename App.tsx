@@ -29,7 +29,7 @@ export default function App() {
   return (
     <GlobalProvider>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="TripList">
+        <Drawer.Navigator initialRouteName="Login">
           <Drawer.Screen
             name="Login"
             component={Login}
