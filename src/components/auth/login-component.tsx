@@ -41,7 +41,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showLoading, setShowLoading] = useState(false);
-  const navigation = useNavigation<screenProp>();
+  const navigation = useNavigation();
 
   useEffect(() => {
     // initialize the Google SDK
@@ -57,7 +57,7 @@ const Login = () => {
       );
       await auth().signInWithCredential(credential);
       console.log('Success');
-      navigation.navigate('AddCountry');
+      navigation.navigate('TripList');
     } catch (error) {
       console.log(error);
     }

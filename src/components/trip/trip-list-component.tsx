@@ -9,7 +9,15 @@ import {
   FlatList,
   ScrollView,
   Alert,
+  Animated,
+  TouchableOpacity,
+  Easing,
+  Dimensions,
+  Image,
+  YellowBox,
 } from 'react-native';
+
+var {width, height} = Dimensions.get('window');
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
@@ -32,16 +40,64 @@ const TripList = () => {
     deleteTrip,
   } = useContext(GlobalContext);
   const isFocused = useIsFocused();
+  const [fadeValue, setFadeValue] = useState(new Animated.Value(0));
+  const [xValue, setXValue] = useState(new Animated.Value(0));
 
   useEffect(() => {
     if (isFocused) {
       console.log('called');
       getTripList();
     }
+    YellowBox.ignoreWarnings(['Animated: `useNativeDriver`']);
   }, [isFocused]);
+
+  const fadeAnimation = () => {
+    Animated.timing(fadeValue, {
+      toValue: 1,
+      duration: 1200,
+    }).start();
+  };
+
+  const moveAnimation = () => {
+    Animated.timing(xValue, {
+      toValue: width - 100,
+      duration: 1000,
+      asing: Easing.cubic,
+    }).start(() => {
+      Animated.timing(xValue, {
+        toValue: 0,
+        duration: 1000,
+        asing: Easing.linear,
+      }).start(() => {
+        moveAnimation();
+      });
+    });
+  };
 
   return (
     <ScrollView style={styles.container}>
+      {/* <Animated.View
+        style={[
+          styles.animatedView,
+          {
+            left: xValue,
+          },
+        ]}></Animated.View> */}
+      <Animated.Image
+        style={[
+          styles.imageView,
+          {
+            left: xValue,
+          },
+        ]}
+        source={{
+          uri: 'https://images.wsj.net/im-196106?width=1280&size=1',
+        }}
+      />
+      <TouchableOpacity style={styles.button} onPress={() => moveAnimation()}>
+        <Text style={styles.buttonText}>Start Animation</Text>
+      </TouchableOpacity>
+
       <View>
         <Button
           onPress={() => {
@@ -167,5 +223,28 @@ const styles = StyleSheet.create({
   footerButton: {
     position: 'relative',
     marginLeft: 20,
+  },
+  animatedView: {
+    width: 100,
+    height: 100,
+    backgroundColor: 'skyblue',
+  },
+  button: {
+    backgroundColor: 'steelblue',
+    height: 45,
+    marginTop: 20,
+    alignSelf: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    padding: 12,
+    paddingHorizontal: 20,
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  imageView: {
+    width: 100,
+    height: 100,
+    backgroundColor: 'transparent',
   },
 });
