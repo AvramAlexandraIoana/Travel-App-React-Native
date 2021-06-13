@@ -1,5 +1,4 @@
 import React, {createContext, useEffect, useReducer, useState} from 'react';
-import AppReducer from './app-reducer';
 
 //Create Context
 export const GlobalContext = createContext({} as any);
@@ -7,7 +6,7 @@ export const GlobalContext = createContext({} as any);
 //Provider Componennt
 import firestore from '@react-native-firebase/firestore';
 
-export const GlobalProvider = ({children}) => {
+export const GlobalProvider = ({children}: {children: any}) => {
   const [showLoading, setShowLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -56,7 +55,7 @@ export const GlobalProvider = ({children}) => {
     }
   };
 
-  const getCountry = id => {
+  const getCountry = (id: string) => {
     console.log(id);
     const dbRef = refCountry.doc(id);
     dbRef
@@ -179,7 +178,7 @@ export const GlobalProvider = ({children}) => {
       });
   };
 
-  const getLocation = id => {
+  const getLocation = (id: string) => {
     const dbRef = refLocation.doc(id);
     dbRef
       .get()
@@ -276,7 +275,7 @@ export const GlobalProvider = ({children}) => {
       });
   };
 
-  const getAgency = id => {
+  const getAgency = (id: string) => {
     const dbRef = refAgency.doc(id);
     dbRef
       .get()
@@ -424,7 +423,7 @@ export const GlobalProvider = ({children}) => {
       });
   };
 
-  const getTrip = id => {
+  const getTrip = (id: string) => {
     const dbRef = refTrip.doc(id);
     dbRef
       .get()
