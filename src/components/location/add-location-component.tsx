@@ -86,7 +86,7 @@ const AddLocation = () => {
       {
         <View style={{borderWidth: 1, borderColor: '#ccc', borderRadius: 4}}>
           <Picker
-            selectedValue={selectedValue}
+            selectedValue={countryId}
             style={{height: 50}}
             onValueChange={(itemValue, itemIndex) => {
               if (itemValue != '0') {

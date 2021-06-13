@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {View, Text, Button, StyleSheet, ScrollView} from 'react-native';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
@@ -18,6 +18,7 @@ import DatePicker from 'react-native-datepicker';
 import {YellowBox} from 'react-native';
 import _ from 'lodash';
 import {Icon} from 'react-native-elements';
+import {GlobalContext} from '../context/global-state';
 
 YellowBox.ignoreWarnings(['componentWillReceiveProps']);
 const _console = _.clone(console);
@@ -28,97 +29,51 @@ console.warn = message => {
 };
 
 const AddTrip = () => {
-  const [selectedValue, setSelectedValue] = useState('');
   const navigation = useNavigation();
 
-  const [locationList, setLocationList] = useState([] as any);
-  const [agencyList, setAgencyList] = useState([] as any);
-  const [tripName, setTripName] = useState('');
-  const [price, setPrice] = useState('');
-  const [numberOfSeats, setNumberOfSeats] = useState('');
-  const [duration, setDuration] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [agencyId, setAgencyId] = useState('');
-  const [locationId, setLocationId] = useState('');
+  const {
+    getLocationList,
+    getAgencyList,
+    tripName,
+    setTripName,
+    duration,
+    setDuration,
+    price,
+    setPrice,
+    numberOfSeats,
+    setNumberOfSeats,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    locationId,
+    setLocationId,
+    agencyId,
+    setAgencyId,
+    locationList,
+    agencyList,
+    showLoading,
+    addTrip,
+    errorMessage,
+  } = useContext(GlobalContext);
 
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-
-  const refAgency = firestore().collection('agency');
-  const refLocation = firestore().collection('location');
-  const refTrip = firestore().collection('trip');
-
-  const getLocationList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await refLocation.get();
-      snapshot.forEach(res => {
-        const {city} = res.data();
-        list.push({
-          id: res.id,
-          city,
-        });
-      });
-      console.log(list);
-      setLocationList([...list]);
-      setShowLoading(false);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
-
-  const getAgencyList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await refAgency.get();
-      snapshot.forEach(res => {
-        const {name, locationId} = res.data();
-        list.push({
-          id: res.id,
-          name,
-          locationId,
-        });
-      });
-      console.log(list);
-      setAgencyList([...list]);
-      setShowLoading(false);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
-
-  const addTrip = () => {
-    refTrip
-      .add({
-        name: tripName,
-        duration: duration,
-        numberOfSeats: numberOfSeats,
-        price: price,
-        startDate: startDate,
-        endDate: endDate,
-        agencyId: agencyId,
-        locationId: locationId,
-      })
-      .then((response: any) => {
-        navigation.navigate('TripList');
-        console.log('Trip adaugata cu succes');
-        console.log(response);
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(errorMessage);
-      });
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getLocationList();
-    getAgencyList();
-  }, []);
+    setTripName('');
+    setDuration('');
+    setPrice('');
+    setNumberOfSeats('');
+    setStartDate('');
+    setEndDate('');
+    setLocationId('');
+    setAgencyId('');
+    if (isFocused) {
+      console.log('called');
+      getLocationList();
+      getAgencyList();
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -276,7 +231,19 @@ const AddTrip = () => {
       <FormButton
         buttonTitle="Add Trip"
         onPress={() => {
-          addTrip();
+          addTrip(
+            tripName,
+            duration,
+            numberOfSeats,
+            price,
+            startDate,
+            endDate,
+            agencyId,
+            locationId,
+          );
+          if (!errorMessage) {
+            navigation.navigate('TripList');
+          }
         }}
       />
       {showLoading && <Loader></Loader>}

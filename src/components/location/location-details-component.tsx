@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
@@ -22,11 +22,32 @@ import {GlobalContext} from '../context/global-state';
 
 const LocationDetails = ({route}: {route: any}) => {
   const navigation = useNavigation();
-  const {showLoading, getLocation, city, streetAddress} =
-    useContext(GlobalContext);
+  const {
+    streetAddress,
+    setStreetAddress,
+    city,
+    setCityName,
+    countryId,
+    setCountryId,
+    countryList,
+    getCountryList,
+    showLoading,
+    errorMessage,
+    getLocation,
+    updateLocation,
+  } = useContext(GlobalContext);
+
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    getLocation();
-  }, []);
+    setCityName('');
+    setStreetAddress('');
+    setCountryId('');
+    if (isFocused) {
+      console.log('called');
+      getLocation(route.params.id);
+    }
+  }, [isFocused]);
 
   return (
     <ScrollView style={styles.container}>

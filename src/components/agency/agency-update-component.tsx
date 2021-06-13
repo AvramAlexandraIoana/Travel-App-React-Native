@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
@@ -11,81 +11,34 @@ import Input from '../custom-fields/input';
 import Loader from '../custom-fields/loader';
 import {Picker} from '@react-native-picker/picker';
 import {Icon} from 'react-native-elements';
+import {GlobalContext} from '../context/global-state';
 
 const AgencyUpdate = ({route}: {route: any}) => {
   const navigation = useNavigation();
+  const {
+    locationList,
+    getLocationList,
+    agencyName,
+    setAgencyName,
+    locationId,
+    setLocationId,
+    updateAgency,
+    getAgency,
+    showLoading,
+    errorMessage,
+  } = useContext(GlobalContext);
 
-  const [agencyName, setAgencyName] = useState('');
-  const [locationId, setLocationId] = useState('');
-  const [locationList, setLocationList] = useState([] as any);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-
-  const refLocation = firestore().collection('location');
-  const refAgency = firestore().collection('agency');
-
-  const getLocationList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await refLocation.get();
-      snapshot.forEach(res => {
-        const {city} = res.data();
-        list.push({
-          id: res.id,
-          city,
-        });
-      });
-      console.log(list);
-      setLocationList([...list]);
-      setShowLoading(false);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
-
-  const getAgency = () => {
-    const dbRef = refAgency.doc(route.params.id);
-    dbRef
-      .get()
-      .then((response: any) => {
-        console.log(response);
-        if (response.exists) {
-          const agency = response.data();
-          console.log(agency);
-          setAgencyName(agency.name);
-          setLocationId(agency.locationId);
-        } else {
-          console.log('Agency does not exist!');
-        }
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(error);
-      });
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getAgency();
-    getLocationList();
-  }, []);
-
-  const updateAgency = (id: string) => {
-    const dbRef = refAgency.doc(id);
-    dbRef
-      .set({
-        name: agencyName,
-        locationId: locationId,
-      })
-      .then(response => {
-        navigation.navigate('AgencyList');
-      })
-      .catch(error => {
-        console.log('Error', error);
-        setErrorMessage(error);
-      });
-  };
+    setLocationId('');
+    setAgencyName('');
+    if (isFocused) {
+      console.log('called');
+      getLocationList();
+      getAgency(route.params.id);
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -136,7 +89,10 @@ const AgencyUpdate = ({route}: {route: any}) => {
       <FormButton
         buttonTitle="Update Agency"
         onPress={() => {
-          updateAgency(route.params.id);
+          updateAgency(route.params.id, agencyName, locationId);
+          if (!errorMessage) {
+            navigation.navigate('AgencyList');
+          }
         }}
       />
       {showLoading && <Loader></Loader>}

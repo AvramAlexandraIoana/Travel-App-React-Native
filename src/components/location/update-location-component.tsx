@@ -17,9 +17,6 @@ import {Icon} from 'react-native-elements';
 import {GlobalContext} from '../context/global-state';
 
 const UpdateLocation = ({route}: {route: any}) => {
-  const refCountry = firestore().collection('country');
-  const refLocation = firestore().collection('location');
-  const [selectedValue, setSelectedValue] = useState('');
   const navigation = useNavigation();
 
   const {

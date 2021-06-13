@@ -1,5 +1,5 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,36 +16,19 @@ import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
+import {GlobalContext} from '../context/global-state';
 
 const AgencyList = () => {
   const navigation = useNavigation();
-  const [agencyList, setAgencyList] = useState([] as any);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('agency');
   const isFocused = useIsFocused();
-
-  const getAgencyList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await ref.get();
-      snapshot.forEach(res => {
-        const {name, locationId} = res.data();
-        list.push({
-          id: res.id,
-          name,
-          locationId,
-        });
-      });
-      console.log(list);
-      setShowLoading(false);
-      setAgencyList([...list]);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
+  const {
+    agencyList,
+    setAgencyList,
+    showLoading,
+    errorMessage,
+    getAgencyList,
+    deleteAgency,
+  } = useContext(GlobalContext);
 
   useEffect(() => {
     if (isFocused) {
@@ -53,21 +36,6 @@ const AgencyList = () => {
       getAgencyList();
     }
   }, [isFocused]);
-
-  const deleteAgency = (id: string) => {
-    console.log(id);
-    const dbRef = ref.doc(id);
-    dbRef
-      .delete()
-      .then(res => {
-        console.log('Agency removed');
-        getAgencyList();
-      })
-      .catch(error => {
-        console.log(error);
-        setErrorMessage(error);
-      });
-  };
 
   return (
     <ScrollView style={styles.container}>

@@ -1,5 +1,5 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -17,53 +17,21 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 import Moment from 'moment';
+import {GlobalContext} from '../context/global-state';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
 
 const TripList = () => {
   const navigation = useNavigation();
-  const [tripList, setTripList] = useState([] as any);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('trip');
+  const {
+    tripList,
+    setTripList,
+    showLoading,
+    getTripList,
+    errorMessage,
+    deleteTrip,
+  } = useContext(GlobalContext);
   const isFocused = useIsFocused();
-
-  const getTripList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await ref.get();
-      snapshot.forEach(res => {
-        const {
-          name,
-          price,
-          duration,
-          numberOfSeats,
-          startDate,
-          endDate,
-          locationId,
-          agencyId,
-        } = res.data();
-        list.push({
-          id: res.id,
-          name,
-          price,
-          duration,
-          numberOfSeats,
-          startDate,
-          endDate,
-          locationId,
-          agencyId,
-        });
-      });
-      console.log(list);
-      setShowLoading(false);
-      setTripList([...list]);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
 
   useEffect(() => {
     if (isFocused) {
@@ -71,21 +39,6 @@ const TripList = () => {
       getTripList();
     }
   }, [isFocused]);
-
-  const deleteTrip = (id: string) => {
-    console.log(id);
-    const dbRef = ref.doc(id);
-    dbRef
-      .delete()
-      .then(res => {
-        console.log('Trip removed');
-        getTripList();
-      })
-      .catch(error => {
-        console.log(error);
-        setErrorMessage(error);
-      });
-  };
 
   return (
     <ScrollView style={styles.container}>

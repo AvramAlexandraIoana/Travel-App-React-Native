@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -18,40 +18,30 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 import FormButton from '../custom-fields/form-button';
+import {GlobalContext} from '../context/global-state';
 
 const AgencyDetails = ({route}: {route: any}) => {
   const navigation = useNavigation();
 
-  const [agencyName, setAgencyName] = useState('');
-  const [locationId, setLocationId] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('agency');
+  const {
+    agencyName,
+    setAgencyName,
+    setLocationId,
+    getAgency,
+    showLoading,
+    errorMessage,
+  } = useContext(GlobalContext);
 
-  const getAgency = () => {
-    const dbRef = ref.doc(route.params.id);
-    dbRef
-      .get()
-      .then((response: any) => {
-        console.log(response);
-        if (response.exists) {
-          const agency = response.data();
-          setAgencyName(agency.name);
-          setLocationId(agency.locationId);
-          console.log(agency);
-        } else {
-          console.log('Agency does not exist!');
-        }
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(error);
-      });
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getAgency();
-  }, []);
+    setLocationId('');
+    setAgencyName('');
+    if (isFocused) {
+      console.log('called');
+      getAgency(route.params.id);
+    }
+  }, [isFocused]);
 
   return (
     <ScrollView style={styles.container}>
