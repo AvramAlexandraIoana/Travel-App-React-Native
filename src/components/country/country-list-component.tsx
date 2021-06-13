@@ -1,5 +1,5 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   View,
   Text,
@@ -16,48 +16,22 @@ import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
+import {GlobalContext, GlobalProvider} from '../context/global-state';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'CountryList'>;
 
 const CountryList = () => {
   const navigation = useNavigation();
-  const [countryList, setCountryList] = useState([] as any);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
   const ref = firestore().collection('country');
   const isFocused = useIsFocused();
-
-  const list1 = [
-    {
-      title: 'Appointments',
-      icon: 'av-timer',
-    },
-    {
-      title: 'Trips',
-      icon: 'flight-takeoff',
-    },
-  ];
-
-  const getCountryList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await ref.get();
-      snapshot.forEach(res => {
-        const {name} = res.data();
-        list.push({
-          id: res.id,
-          name,
-        });
-      });
-      console.log(list);
-      setShowLoading(false);
-      setCountryList([...list]);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
+  const {
+    countryList,
+    getCountryList,
+    deleteCountry,
+    showLoading,
+    errorMessage,
+  } = useContext(GlobalContext);
+  console.log(countryList);
 
   useEffect(() => {
     if (isFocused) {
@@ -65,21 +39,6 @@ const CountryList = () => {
       getCountryList();
     }
   }, [isFocused]);
-
-  const deleteCountry = (id: string) => {
-    console.log(id);
-    const dbRef = ref.doc(id);
-    dbRef
-      .delete()
-      .then(res => {
-        console.log('Country removed');
-        getCountryList();
-      })
-      .catch(error => {
-        console.log(error);
-        setErrorMessage(error);
-      });
-  };
 
   return (
     <ScrollView style={styles.container}>
