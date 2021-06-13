@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
@@ -14,68 +14,40 @@ import firebase from '@react-native-firebase/app';
 import {ActivityIndicator} from 'react-native';
 import Loader from '../custom-fields/loader';
 import {Icon} from 'react-native-elements';
+import {GlobalContext} from '../context/global-state';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'AddLocation'>;
 
 const AddLocation = () => {
-  const refCountry = firestore().collection('country');
-  const refLocation = firestore().collection('location');
   const [selectedValue, setSelectedValue] = useState('');
   const navigation = useNavigation<screenProp>();
 
-  const [countryList, setCountryList] = useState([] as any);
-  const [streetAddress, setStreetAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [countryId, setCountryId] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
+  const {
+    streetAddress,
+    setStreetAddress,
+    city,
+    setCityName,
+    countryId,
+    setCountryId,
+    countryList,
+    getCountryList,
+    showLoading,
+    errorMessage,
+    addLocation,
+  } = useContext(GlobalContext);
 
-  const getCountryList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await refCountry.get();
-      snapshot.forEach(res => {
-        const {name} = res.data();
-        list.push({
-          id: res.id,
-          name,
-        });
-      });
-      console.log(list);
-      setCountryList([...list]);
-      setShowLoading(false);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getCountryList();
-  }, []);
+    setCityName('');
+    setStreetAddress('');
+    setCountryId('');
+    if (isFocused) {
+      console.log('called');
+      getCountryList();
+    }
+  }, [isFocused]);
 
-  const addLocation = (
-    streetAddress: string,
-    city: string,
-    countryId: string,
-  ) => {
-    refLocation
-      .add({
-        streetAddress: streetAddress,
-        city: city,
-        countryId: countryId,
-      })
-      .then((response: any) => {
-        console.log('Locatia adaugata cu succes');
-        console.log(response);
-        navigation.navigate('LocationList');
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(errorMessage);
-      });
-  };
   return (
     <View style={styles.container}>
       <View
@@ -97,7 +69,7 @@ const AddLocation = () => {
       <Text style={styles.text}>Add Location</Text>
       <Input
         labelValue={city}
-        onChangeText={(city: string) => setCity(city)}
+        onChangeText={(city: string) => setCityName(city)}
         placeholderText="City"
         autoCapitalize="none"
         autoCorrect={false}
@@ -133,6 +105,9 @@ const AddLocation = () => {
         buttonTitle="Add Location"
         onPress={() => {
           addLocation(streetAddress, city, countryId);
+          if (!errorMessage) {
+            navigation.navigate('LocationList');
+          }
         }}
       />
       {/* <Text>{!showLoading ? countryList.length : 0}</Text> */}

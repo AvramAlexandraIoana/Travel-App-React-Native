@@ -1,5 +1,5 @@
 import {useIsFocused, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,37 +16,19 @@ import {windowWidth} from '../../utils/dimension';
 import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
+import {GlobalContext} from '../context/global-state';
 
 const LocationList = () => {
   const navigation = useNavigation();
-  const [locationList, setLocationList] = useState([] as any);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('location');
+  const {
+    locationList,
+    getLocationList,
+    deleteLocation,
+    showLoading,
+    errorMessage,
+  } = useContext(GlobalContext);
+  console.log(locationList);
   const isFocused = useIsFocused();
-
-  const getLocationList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await ref.get();
-      snapshot.forEach(res => {
-        const {city, streetAddress, countryId} = res.data();
-        list.push({
-          id: res.id,
-          city,
-          streetAddress,
-          countryId,
-        });
-      });
-      console.log(list);
-      setShowLoading(false);
-      setLocationList([...list]);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
 
   useEffect(() => {
     if (isFocused) {
@@ -54,21 +36,6 @@ const LocationList = () => {
       getLocationList();
     }
   }, [isFocused]);
-
-  const deleteLocation = (id: string) => {
-    console.log(id);
-    const dbRef = ref.doc(id);
-    dbRef
-      .delete()
-      .then(res => {
-        console.log('Country removed');
-        getLocationList();
-      })
-      .catch(error => {
-        console.log(error);
-        setErrorMessage(error);
-      });
-  };
 
   return (
     <ScrollView style={styles.container}>

@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
@@ -9,31 +9,25 @@ import FormButton from '../custom-fields/form-button';
 import FormInput from '../custom-fields/form-input';
 import Input from '../custom-fields/input';
 import {Icon} from 'react-native-elements';
+import {GlobalContext} from '../context/global-state';
 
 type screenProp = StackNavigationProp<RootStackParamList, 'AddCountry'>;
 
 const AddCountry = () => {
   const ref = firestore().collection('country');
   const navigation = useNavigation<screenProp>();
+  const {addCountry, showLoading, errorMessage, countryName, setCountryName} =
+    useContext(GlobalContext);
 
-  const [countryName, setCountryName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const isFocused = useIsFocused();
 
-  const addCountry = (countryName: string) => {
-    ref
-      .add({
-        name: countryName,
-      })
-      .then(response => {
-        console.log('Tara adaugata cu succes');
-        console.log(response);
-        navigation.navigate('CountryList');
-      })
-      .catch(error => {
-        console.log('Eroare');
-        setErrorMessage(errorMessage);
-      });
-  };
+  useEffect(() => {
+    setCountryName('');
+    if (isFocused) {
+      console.log('called');
+    }
+  }, [isFocused]);
+
   return (
     <View style={styles.container}>
       <View
@@ -64,6 +58,9 @@ const AddCountry = () => {
         buttonTitle="Add Country"
         onPress={() => {
           addCountry(countryName);
+          if (!errorMessage) {
+            navigation.navigate('CountryList');
+          }
         }}
       />
     </View>

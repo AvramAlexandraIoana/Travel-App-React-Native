@@ -1,6 +1,6 @@
-import {useNavigation} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {View, Text, Button, StyleSheet} from 'react-native';
 import {RootStackParamList} from '../../../RootStackParams';
 import {windowWidth} from '../../utils/dimension';
@@ -14,6 +14,7 @@ import firebase from '@react-native-firebase/app';
 import {ActivityIndicator} from 'react-native';
 import Loader from '../custom-fields/loader';
 import {Icon} from 'react-native-elements';
+import {GlobalContext} from '../context/global-state';
 
 const UpdateLocation = ({route}: {route: any}) => {
   const refCountry = firestore().collection('country');
@@ -21,78 +22,33 @@ const UpdateLocation = ({route}: {route: any}) => {
   const [selectedValue, setSelectedValue] = useState('');
   const navigation = useNavigation();
 
-  const [countryList, setCountryList] = useState([] as any);
+  const {
+    streetAddress,
+    setStreetAddress,
+    city,
+    setCityName,
+    countryId,
+    setCountryId,
+    countryList,
+    getCountryList,
+    showLoading,
+    errorMessage,
+    getLocation,
+    updateLocation,
+  } = useContext(GlobalContext);
 
-  const [streetAddress, setStreetAddress] = useState('');
-  const [city, setCity] = useState('');
-  const [countryId, setCountryId] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-
-  const getLocation = () => {
-    const dbRef = refLocation.doc(route.params.id);
-    dbRef
-      .get()
-      .then((response: any) => {
-        console.log(response);
-        if (response.exists) {
-          const location = response.data();
-          console.log(location);
-          setCity(location.city);
-          setStreetAddress(location.streetAddress);
-          setCountryId(location.countryId);
-        } else {
-          console.log('Location does not exist!');
-        }
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(error);
-      });
-  };
-
-  const getCountryList = async () => {
-    setShowLoading(true);
-    try {
-      var list: any = [];
-      var snapshot = await refCountry.get();
-      snapshot.forEach(res => {
-        const {name} = res.data();
-        list.push({
-          id: res.id,
-          name,
-        });
-      });
-      console.log(list);
-      setCountryList([...list]);
-      setShowLoading(false);
-    } catch (e) {
-      console.log(e);
-      setErrorMessage('Error');
-    }
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getCountryList();
-    getLocation();
-  }, []);
-
-  const updateLocation = (id: string) => {
-    const dbRef = refLocation.doc(id);
-    dbRef
-      .set({
-        city: city,
-        streetAddress: streetAddress,
-        countryId: countryId,
-      })
-      .then(response => {
-        navigation.navigate('LocationList');
-      })
-      .catch(error => {
-        console.log('Error', error);
-        setErrorMessage(error);
-      });
-  };
+    setCityName('');
+    setStreetAddress('');
+    setCountryId('');
+    if (isFocused) {
+      console.log('called');
+      getCountryList();
+      getLocation(route.params.id);
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -112,10 +68,10 @@ const UpdateLocation = ({route}: {route: any}) => {
           }}
         />
       </View>
-      <Text style={styles.text}>Add Location</Text>
+      <Text style={styles.text}>Update Location</Text>
       <Input
         labelValue={city}
-        onChangeText={(city: string) => setCity(city)}
+        onChangeText={(city: string) => setCityName(city)}
         placeholderText="City"
         autoCapitalize="none"
         autoCorrect={false}
@@ -150,7 +106,10 @@ const UpdateLocation = ({route}: {route: any}) => {
       <FormButton
         buttonTitle="Update Location"
         onPress={() => {
-          updateLocation(route.params.id);
+          updateLocation(route.params.id, city, streetAddress, countryId);
+          if (!errorMessage) {
+            navigation.navigate('LocationList');
+          }
         }}
       />
       {/* <Text>{!showLoading ? countryList.length : 0}</Text> */}

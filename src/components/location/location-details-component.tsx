@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -18,37 +18,12 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 import FormButton from '../custom-fields/form-button';
+import {GlobalContext} from '../context/global-state';
 
 const LocationDetails = ({route}: {route: any}) => {
   const navigation = useNavigation();
-  const [city, setCityName] = useState('');
-  const [streetAddress, setStreetAddress] = useState('');
-
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('location');
-
-  const getLocation = () => {
-    const dbRef = ref.doc(route.params.id);
-    dbRef
-      .get()
-      .then((response: any) => {
-        console.log(response);
-        if (response.exists) {
-          const location = response.data();
-          console.log(location);
-          setCityName(location.city);
-          setStreetAddress(location.streetAddress);
-        } else {
-          console.log('Location does not exist!');
-        }
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(error);
-      });
-  };
-
+  const {showLoading, getLocation, city, streetAddress} =
+    useContext(GlobalContext);
   useEffect(() => {
     getLocation();
   }, []);

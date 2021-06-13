@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -17,37 +17,21 @@ import firestore from '@react-native-firebase/firestore';
 import {ListItem, Avatar, Icon} from 'react-native-elements';
 import Loader from '../custom-fields/loader';
 import FormButton from '../custom-fields/form-button';
+import {GlobalContext} from '../context/global-state';
 
 const CountryDetails = ({route}: {route: any}) => {
   const navigation = useNavigation();
-  const [countryName, setCountryName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [showLoading, setShowLoading] = useState(false);
-  const ref = firestore().collection('country');
+  const {showLoading, getCountry, countryName, setCountryName} =
+    useContext(GlobalContext);
 
-  const getCountry = () => {
-    const dbRef = ref.doc(route.params.id);
-    dbRef
-      .get()
-      .then((response: any) => {
-        console.log(response);
-        if (response.exists) {
-          const country = response.data();
-          console.log(country);
-          setCountryName(country.name);
-        } else {
-          console.log('Country does not exist!');
-        }
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(error);
-      });
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getCountry();
-  }, []);
+    setCountryName('');
+    if (isFocused) {
+      getCountry(route.params.id);
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>

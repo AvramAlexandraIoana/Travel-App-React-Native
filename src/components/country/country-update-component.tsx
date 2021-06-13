@@ -1,56 +1,27 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useContext, useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import FormButton from '../custom-fields/form-button';
 import Input from '../custom-fields/input';
 import firestore from '@react-native-firebase/firestore';
 import {Icon} from 'react-native-elements';
+import {GlobalContext} from '../context/global-state';
 
 const CountryUpdate = ({route}: {route: any}) => {
   const navigation = useNavigation();
 
-  const ref = firestore().collection('country');
-  const [countryName, setCountryName] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const {errorMessage, getCountry, countryName, setCountryName, updateCountry} =
+    useContext(GlobalContext);
 
-  const getCountry = () => {
-    const dbRef = ref.doc(route.params.id);
-    dbRef
-      .get()
-      .then((response: any) => {
-        console.log(response);
-        if (response.exists) {
-          const country = response.data();
-          console.log(country);
-          setCountryName(country.name);
-        } else {
-          console.log('Country does not exist!');
-        }
-      })
-      .catch((error: any) => {
-        console.log('Eroare');
-        setErrorMessage(error);
-      });
-  };
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    getCountry();
-  }, []);
-
-  const updateCountry = (id: string) => {
-    const dbRef = ref.doc(id);
-    dbRef
-      .set({
-        name: countryName,
-      })
-      .then(response => {
-        navigation.navigate('CountryList');
-      })
-      .catch(error => {
-        console.log('Error', error);
-        setErrorMessage(error);
-      });
-  };
+    setCountryName('');
+    if (isFocused) {
+      console.log('called');
+      getCountry(route.params.id);
+    }
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
@@ -81,7 +52,10 @@ const CountryUpdate = ({route}: {route: any}) => {
       <FormButton
         buttonTitle="Update Country"
         onPress={() => {
-          updateCountry(route.params.id);
+          updateCountry(route.params.id, countryName);
+          if (!errorMessage) {
+            navigation.navigate('CountryList');
+          }
         }}
       />
     </View>
